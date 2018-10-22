@@ -53,8 +53,10 @@ namespace AppLegal
                     new Position(36.9628066, -122.0194722), Distance.FromMiles(1.5)));
 
             };
+            
             var reLocate = new Button { Text = "Re-center" };
             reLocate.Clicked += (sender, e) => {
+
                 map.MoveToRegion(MapSpan.FromCenterAndRadius(
                     new Position(36.9628066, -122.0194722), Distance.FromMiles(3)));
             };
