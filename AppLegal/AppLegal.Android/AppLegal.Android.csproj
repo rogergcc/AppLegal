@@ -53,7 +53,7 @@
       <Version>3.0.0.12</Version>
     </PackageReference>
     <PackageReference Include="Xam.Plugin.Geolocator">
-      <Version>4.5.0.6</Version>
+      <Version>4.5.2-beta</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Essentials">
       <Version>0.11.0-preview</Version>

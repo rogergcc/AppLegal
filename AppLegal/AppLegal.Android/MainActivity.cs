@@ -17,32 +17,46 @@ namespace AppLegal.Droid
           {
               Android.Manifest.Permission.AccessCoarseLocation,
               Android.Manifest.Permission.AccessFineLocation,
-              
+
             };
 
         const int RequestLocationId = 0;
-        
+
+
+        public async System.Threading.Tasks.Task PositionGetAsync()
+        {
+            var locator = Plugin.Geolocator.CrossGeolocator.Current;
+            //var currentPosition = new Position();
+            locator.DesiredAccuracy = 50;
+            var currentPosition = await locator.GetPositionAsync(TimeSpan.FromSeconds(10000));
+            var afs= currentPosition.Latitude;
+        }
+        protected override void OnCreate(Bundle savedInstanceState)
+        {
+            TabLayoutResource = Resource.Layout.Tabbar;
+            ToolbarResource = Resource.Layout.Toolbar;
+
+            Xamarin.Essentials.Platform.Init(this, savedInstanceState);
+            RequestPermissions(PermissionsLocation, RequestLocationId);
+            var locator = Plugin.Geolocator.CrossGeolocator.Current;
+            //var currentPosition = new Position();
+            //var currentPosition = await locator.GetPositionAsync(TimeSpan.FromSeconds(10000));
+            //var asfas = PositionGetAsync();
+
+            base.OnCreate(savedInstanceState);
+           
+            //RequestPermissions(PermissionsLocation, RequestLocationId);
+
+            //SetContentView(Resource.Layout.activity_maps);
+            global::Xamarin.Forms.Forms.Init(ApplicationContext, savedInstanceState);
+            
+            LoadApplication(new App());
+        }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-
-        protected override void OnCreate(Bundle savedInstanceState)
-        {
-            TabLayoutResource = Resource.Layout.Tabbar;
-            ToolbarResource = Resource.Layout.Toolbar;
-            
-
-            base.OnCreate(savedInstanceState);
-           
-            
-            //SetContentView(Resource.Layout.activity_maps);
-            global::Xamarin.Forms.Forms.Init(ApplicationContext, savedInstanceState);
- Xamarin.Essentials.Platform.Init(this, savedInstanceState);
-            RequestPermissions(PermissionsLocation, RequestLocationId);
-            LoadApplication(new App());
         }
     }
 }

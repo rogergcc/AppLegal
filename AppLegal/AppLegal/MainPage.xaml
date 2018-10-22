@@ -2,17 +2,22 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:AppLegal"
-             x:Class="AppLegal.MainPage">
+            
+             x:Class="AppLegal.MainPage"
+             >
 
-    <StackLayout>
-        <!-- Place new controls here -->
-        <Image
-            Source="@drawable/busqueda"
+    <StackLayout Orientation="Vertical"
             >
-        </Image>
-        <Label Text="USER" 
-           HorizontalOptions="CenterAndExpand"
-           VerticalOptions="Start" />
+            <Label Text="Usuario"
+                VerticalOptions="Start" 
+                HorizontalOptions="CenterAndExpand" />
+        <Button
+            Text="Posicion Actual"
+            Clicked="Button_ClickedAsync">
+            
+        </Button>
+        
+        
     </StackLayout>
 
 </ContentPage>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
@@ -10,18 +11,27 @@ namespace AppLegal
 {
     public partial class MainPage : ContentPage
     {
-        Map map;
+        //Map map;
 
         public MainPage()
         {
 
-            map = new Map
+            InitializeComponent();
+            /*map = new Map
             {
                 IsShowingUser = true,
                 HeightRequest = 100,
                 WidthRequest = 960,
                 VerticalOptions = LayoutOptions.FillAndExpand
             };
+            var locator = Plugin.Geolocator.CrossGeolocator.Current;
+            //var currentPosition = new Position();
+            //var currentPosition =await locator.GetPositionAsync(TimeSpan.FromSeconds(10000));
+
+            //var lat = currentPosition.ToString();
+
+
+
 
             map.MoveToRegion(MapSpan.FromCenterAndRadius(
                 new Position(36.9628066, -122.0194722), Distance.FromMiles(3)));
@@ -75,7 +85,33 @@ namespace AppLegal
                     map,
                     buttons
                 }
-            };
+            };*/
+        }
+
+        private async void Button_ClickedAsync(object sender, EventArgs e)
+        {
+            var locator = Plugin.Geolocator.CrossGeolocator.Current;
+            try
+            {
+                locator.DesiredAccuracy = 50;
+                var request = new GeolocationRequest(GeolocationAccuracy.High);
+                var location2 = await Geolocation.GetLocationAsync(request);
+                Location currentLocation = new Location();
+                currentLocation = location2;
+                
+                //var currentPosition = await locator.GetPositionAsync(TimeSpan.FromSeconds(10000));
+                
+                //var afs = currentPosition.Latitude;
+            }
+            catch (Exception ex)
+            {
+
+                Console.Write("ERROR:  "+ ex.ToString());
+                throw new NotImplementedException();
+            }
+            
+
+            
         }
     }
 }
