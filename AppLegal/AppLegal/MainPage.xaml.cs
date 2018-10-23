@@ -11,30 +11,41 @@ namespace AppLegal
 {
     public partial class MainPage : ContentPage
     {
-        //Map map;
-
+        Map map;
+        Location currentLocation = new Location();
         public MainPage()
         {
+            ToolbarItem toolbarItem = new ToolbarItem
+            {
+                Icon = "logo.png"
+            };
+            ToolbarItems.Add(toolbarItem);
+            var margin = 20;
 
-            InitializeComponent();
-            /*map = new Map
+
+
+            //InitializeComponent();
+            //falta averiguar que antes q ejecute el mapa verifique permisos Location
+            
+            map = new Map
             {
                 IsShowingUser = true,
-                HeightRequest = 100,
-                WidthRequest = 960,
+                HeightRequest = App.ScreenHeight,
+                WidthRequest = App.ScreenWidth,
+                Margin = margin-5,
+                
                 VerticalOptions = LayoutOptions.FillAndExpand
+                
             };
-            var locator = Plugin.Geolocator.CrossGeolocator.Current;
-            //var currentPosition = new Position();
-            //var currentPosition =await locator.GetPositionAsync(TimeSpan.FromSeconds(10000));
 
-            //var lat = currentPosition.ToString();
+            //var locator = Plugin.Geolocator.CrossGeolocator.Current;
 
+            //var loc = currentLocation;
 
+            posicionAsync();
 
-
-            map.MoveToRegion(MapSpan.FromCenterAndRadius(
-                new Position(36.9628066, -122.0194722), Distance.FromMiles(3)));
+            //map.MoveToRegion(MapSpan.FromCenterAndRadius(
+            //    new Position(36.9628066, -122.0194722), Distance.FromMiles(3)));
             var position = new Position(36.9628066, -122.0194722);
             var pin = new Pin
             {
@@ -63,31 +74,73 @@ namespace AppLegal
                     new Position(36.9628066, -122.0194722), Distance.FromMiles(1.5)));
 
             };
-            
-            var reLocate = new Button { Text = "Re-center" };
-            reLocate.Clicked += (sender, e) => {
+            var txtUsuario = new Label { Text = "Usuario" };
+            var txtImei = new Label { Text = "Imei" };
+            var imageUser = new Image {
+                HeightRequest=10,
+                WidthRequest=10,
+                Source = ImageSource.FromResource("usuario.png")
+            };
 
-                map.MoveToRegion(MapSpan.FromCenterAndRadius(
-                    new Position(36.9628066, -122.0194722), Distance.FromMiles(3)));
+
+            var reLocate = new Button { Text = "Posicion Actual" };
+            reLocate.Clicked += async (sender, e) => {
+                //var request = new GeolocationRequest(GeolocationAccuracy.High);
+                //var location2 = await Geolocation.GetLocationAsync(request);
+                //map.MoveToRegion(MapSpan.FromCenterAndRadius(
+                //    new Position(location2.Latitude, location2.Longitude),
+                //    Distance.FromMiles(.2)));
+            };
+            
+            var stackUsuario = new StackLayout
+            {
+                Orientation = StackOrientation.Horizontal,
+                Children = { imageUser, txtUsuario }
+            };
+
+            var stackImei = new StackLayout
+            {
+                Orientation = StackOrientation.Horizontal,
+                Children = {  txtImei }
+            };
+
+            var stackLayout = new StackLayout
+            {
+                Orientation = StackOrientation.Vertical,
+                Padding= 20,
+                Margin = margin-5,
+                BackgroundColor = Color.FromHex("FFF"),
+                Children = { stackUsuario,stackImei}
             };
             var buttons = new StackLayout
             {
+                Margin = margin - 5,
                 Orientation = StackOrientation.Horizontal,
                 Children = {
                     morePins, reLocate
                 }
             };
-
+            
             Content = new StackLayout
             {
+                BackgroundColor = Color.FromHex("c1c1c1"),
                 Spacing = 0,
                 Children = {
-                    map,
-                    buttons
+                    
+                    stackLayout,
+                    buttons,
+                    map
                 }
-            };*/
+            };
         }
-
+        public async void posicionAsync()
+        {
+            var request = new GeolocationRequest(GeolocationAccuracy.High);
+            var location2 = await Geolocation.GetLocationAsync(request);
+            map.MoveToRegion(MapSpan.FromCenterAndRadius(
+                new Position(location2.Latitude, location2.Longitude),
+                Distance.FromMiles(.2)));
+        }
         private async void Button_ClickedAsync(object sender, EventArgs e)
         {
             var locator = Plugin.Geolocator.CrossGeolocator.Current;
@@ -96,7 +149,7 @@ namespace AppLegal
                 locator.DesiredAccuracy = 50;
                 var request = new GeolocationRequest(GeolocationAccuracy.High);
                 var location2 = await Geolocation.GetLocationAsync(request);
-                Location currentLocation = new Location();
+               
                 currentLocation = location2;
                 
                 //var currentPosition = await locator.GetPositionAsync(TimeSpan.FromSeconds(10000));

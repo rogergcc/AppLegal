@@ -7,6 +7,8 @@ namespace AppLegal
 {
     public partial class App : Application
     {
+        public static double ScreenHeight;
+        public static double ScreenWidth;
         public App()
         {
             InitializeComponent();
