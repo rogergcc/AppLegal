@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Plugin.DeviceInfo;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,11 +23,11 @@ namespace AppLegal
             ToolbarItems.Add(toolbarItem);
             var margin = 20;
 
-
+            var deviceId = CrossDeviceInfo.Current.Id;
 
             //InitializeComponent();
             //falta averiguar que antes q ejecute el mapa verifique permisos Location
-            
+
             map = new Map
             {
                 IsShowingUser = true,
@@ -84,7 +85,8 @@ namespace AppLegal
 
 
             var reLocate = new Button { Text = "Posicion Actual" };
-            reLocate.Clicked += async (sender, e) => {
+            reLocate.Clicked += (sender, e) =>
+            {
                 //var request = new GeolocationRequest(GeolocationAccuracy.High);
                 //var location2 = await Geolocation.GetLocationAsync(request);
                 //map.MoveToRegion(MapSpan.FromCenterAndRadius(
@@ -103,13 +105,18 @@ namespace AppLegal
                 Orientation = StackOrientation.Horizontal,
                 Children = {  txtImei }
             };
-
+            CornerRadius cornerRadius = new CornerRadius();
+            cornerRadius = 10;
+            
+           
             var stackLayout = new StackLayout
             {
+                
                 Orientation = StackOrientation.Vertical,
                 Padding= 20,
                 Margin = margin-5,
                 BackgroundColor = Color.FromHex("FFF"),
+                
                 Children = { stackUsuario,stackImei}
             };
             var buttons = new StackLayout

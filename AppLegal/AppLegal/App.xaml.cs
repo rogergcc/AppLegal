@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Plugin.FirebasePushNotification;
+using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -14,6 +15,26 @@ namespace AppLegal
             InitializeComponent();
 
             MainPage = new MainPage();
+            CrossFirebasePushNotification.Current.OnTokenRefresh += (s, p) =>
+            {
+                System.Diagnostics.Debug.WriteLine($"TOKEN : {p.Token}");
+            };
+            CrossFirebasePushNotification.Current.OnNotificationReceived += (s, p) =>
+            {
+
+                System.Diagnostics.Debug.WriteLine("Received");
+
+            };
+            CrossFirebasePushNotification.Current.OnNotificationOpened += (s, p) =>
+            {
+                System.Diagnostics.Debug.WriteLine("Opened");
+                foreach (var data in p.Data)
+                {
+                    System.Diagnostics.Debug.WriteLine($"{data.Key} : {data.Value}");
+                }
+
+
+            };
         }
 
         protected override void OnStart()

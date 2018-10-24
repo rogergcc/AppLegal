@@ -7,6 +7,9 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using Plugin.Geolocator;
+using Plugin.DeviceInfo;
+using Xamarin.Forms;
+using Plugin.FirebasePushNotification;
 
 namespace AppLegal.Droid
 {
@@ -17,7 +20,7 @@ namespace AppLegal.Droid
           {
               Android.Manifest.Permission.AccessCoarseLocation,
               Android.Manifest.Permission.AccessFineLocation,
-
+              Android.Manifest.Permission.ReadPhoneState
             };
 
         const int RequestLocationId = 0;
@@ -30,7 +33,7 @@ namespace AppLegal.Droid
             ToolbarResource = Resource.Layout.Toolbar;
             
             
-            var locator = Plugin.Geolocator.CrossGeolocator.Current;
+            //var locator = Plugin.Geolocator.CrossGeolocator.Current;
             //var currentPosition = new Position();
             //var currentPosition = await locator.GetPositionAsync(TimeSpan.FromSeconds(10000));
             
@@ -41,9 +44,35 @@ namespace AppLegal.Droid
 
             //SetContentView(Resource.Layout.activity_maps);
             global::Xamarin.Forms.Forms.Init(ApplicationContext, savedInstanceState);
+
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             RequestPermissions(PermissionsLocation, RequestLocationId);
+
+            Plugin.CurrentActivity.CrossCurrentActivity.Current.Init(this, savedInstanceState);
+
+            var deviceId = CrossDeviceInfo.Current.Id;
+
+            Android.Telephony.TelephonyManager mTelephonyMgr;
+            mTelephonyMgr = (Android.Telephony.TelephonyManager)GetSystemService(TelephonyService);
+
+            
+            //IMEI number  
+            //String m_deviceId = mTelephonyMgr.DeviceId;
+
+            //String m_deviceId2 = GetIMEI();
             LoadApplication(new App());
+            FirebasePushNotificationManager.ProcessIntent(this, Intent);
+        }
+        public string GetIMEI()
+        {
+            Android.Telephony.TelephonyManager mTelephonyMgr = (Android.Telephony.TelephonyManager)Forms.Context.GetSystemService(Android.Content.Context.TelephonyService);
+            if (Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O)
+                // TODO: Some phones has more than 1 SIM card or may not have a SIM card inserted at all
+                return mTelephonyMgr.GetMeid(0);
+            else
+            #pragma warning disable CS0618 // Type or member is obsolete
+                            return mTelephonyMgr.DeviceId;
+            #pragma warning restore CS0618 // Type or member is obsolete
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
