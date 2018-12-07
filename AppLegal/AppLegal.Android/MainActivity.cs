@@ -10,6 +10,7 @@ using Plugin.Geolocator;
 using Plugin.DeviceInfo;
 using Xamarin.Forms;
 using Plugin.FirebasePushNotification;
+using Firebase.Iid;
 
 namespace AppLegal.Droid
 {
@@ -62,6 +63,8 @@ namespace AppLegal.Droid
             //String m_deviceId2 = GetIMEI();
             LoadApplication(new App());
             FirebasePushNotificationManager.ProcessIntent(this, Intent);
+            var refreshedToken = FirebaseInstanceId.Instance.Token;
+
         }
         public string GetIMEI()
         {

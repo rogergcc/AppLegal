@@ -18,9 +18,13 @@ namespace AppLegal
             CrossFirebasePushNotification.Current.OnTokenRefresh += (s, p) =>
             {
                 System.Diagnostics.Debug.WriteLine($"TOKEN : {p.Token}");
+                System.Diagnostics.Debug.WriteLine("toklen: "+ p.Token);
+                Console.Out.WriteLine("TOKEN CONSOLE : + p." + p.Token);
             };
+
             CrossFirebasePushNotification.Current.OnNotificationReceived += (s, p) =>
             {
+                //.Out.WriteLine("TOKEN CONSOLE : + p." + p.Token);
 
                 System.Diagnostics.Debug.WriteLine("Received");
 

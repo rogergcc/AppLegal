@@ -12,7 +12,7 @@ using Android.Widget;
 
 namespace AppLegal.Droid
 {
-    public class FirebaseService
+    public class MyFireMessagingService
     {
 
     }
