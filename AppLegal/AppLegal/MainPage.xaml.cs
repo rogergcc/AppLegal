@@ -78,11 +78,14 @@ namespace AppLegal
             var txtUsuario = new Label { Text = "Usuario" };
             var txtImei = new Label { Text = "Imei" };
             var imageUser = new Image {
-                HeightRequest=10,
-                WidthRequest=10,
-                Source = ImageSource.FromResource("usuario.png")
+               
+                Source = "usuario.png"
             };
+            var imageImei = new Image
+            {
 
+                Source = "contrasena.png"
+            };
 
             var reLocate = new Button { Text = "Posicion Actual" };
             reLocate.Clicked += (sender, e) =>
@@ -103,7 +106,7 @@ namespace AppLegal
             var stackImei = new StackLayout
             {
                 Orientation = StackOrientation.Horizontal,
-                Children = {  txtImei }
+                Children = { imageImei,txtImei }
             };
             CornerRadius cornerRadius = new CornerRadius();
             cornerRadius = 10;
@@ -135,7 +138,7 @@ namespace AppLegal
                 Children = {
                     
                     stackLayout,
-                    buttons,
+                    //buttons,
                     map
                 }
             };
