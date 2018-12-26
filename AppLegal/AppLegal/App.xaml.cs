@@ -14,46 +14,80 @@ namespace AppLegal
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
-            CrossFirebasePushNotification.Current.OnTokenRefresh += (s, p) =>
+            var cards = new CardData();
+
+            var cardstack = new StackLayout
             {
-                System.Diagnostics.Debug.WriteLine($"TOKEN : {p.Token}");
-                System.Diagnostics.Debug.WriteLine("toklen: "+ p.Token);
-                Console.Out.WriteLine("TOKEN CONSOLE : + p." + p.Token);
+                Spacing = 15,
+                Padding = new Thickness(10),
+                VerticalOptions = LayoutOptions.StartAndExpand,
             };
 
-            CrossFirebasePushNotification.Current.OnNotificationReceived += (s, p) =>
+            foreach (var card in cards)
             {
-                //.Out.WriteLine("TOKEN CONSOLE : + p." + p.Token);
+                cardstack.Children.Add(new CardView(card));
+            }
 
-                System.Diagnostics.Debug.WriteLine("Received");
-
+            var shadowcardstack = new StackLayout
+            {
+                Spacing = 5,
+                Padding = new Thickness(2),
+                VerticalOptions = LayoutOptions.StartAndExpand,
             };
-            CrossFirebasePushNotification.Current.OnNotificationOpened += (s, p) =>
+
+            foreach (var card in cards)
             {
-                System.Diagnostics.Debug.WriteLine("Opened");
-                foreach (var data in p.Data)
+                shadowcardstack.Children.Add(new ShadowCardView(card));
+            }
+
+            var page = new ContentPage
+            {
+                Title = "Documentos",
+                BackgroundColor = Color.White,
+                Content = new ScrollView()
                 {
-                    System.Diagnostics.Debug.WriteLine($"{data.Key} : {data.Value}");
+                    Content = new StackLayout()
+                    {
+                        Children = {
+                            cardstack,
+                            shadowcardstack
+                        }
+                    }
                 }
-
-
             };
-        }
 
-        protected override void OnStart()
-        {
-            
-        }
+            MainPage = new NavigationPage(page)
+            {
+                BarBackgroundColor = StyleKit.BarBackgroundColor,
+                BarTextColor = Color.White
+            };
 
-        protected override void OnSleep()
-        {
-            // Handle when your app sleeps
-        }
+            //MainPage = new MainPage();
+            //CrossFirebasePushNotification.Current.OnTokenRefresh += (s, p) =>
+            //{
+            //    System.Diagnostics.Debug.WriteLine($"TOKEN : {p.Token}");
+            //    System.Diagnostics.Debug.WriteLine("toklen: "+ p.Token);
+            //    Console.Out.WriteLine("TOKEN CONSOLE : + p." + p.Token);
+            //};
 
-        protected override void OnResume()
-        {
-            // Handle when your app resumes
+            //CrossFirebasePushNotification.Current.OnNotificationReceived += (s, p) =>
+            //{
+            //    //.Out.WriteLine("TOKEN CONSOLE : + p." + p.Token);
+
+            //    System.Diagnostics.Debug.WriteLine("Received");
+
+            //};
+            //CrossFirebasePushNotification.Current.OnNotificationOpened += (s, p) =>
+            //{
+            //    System.Diagnostics.Debug.WriteLine("Opened");
+            //    foreach (var data in p.Data)
+            //    {
+            //        System.Diagnostics.Debug.WriteLine($"{data.Key} : {data.Value}");
+            //    }
+
+
+            //};
         }
+        
     }
 }

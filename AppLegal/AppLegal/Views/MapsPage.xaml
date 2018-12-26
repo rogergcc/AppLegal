@@ -3,11 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AppLegal.Views.MapsPage">
     <ContentPage.Content>
-        <StackLayout>
+        <StackLayout Orientation="Vertical"
+                     BackgroundColor="#F2F2F2">
             <Label Text="Usuario"
                 VerticalOptions="Start" 
                 HorizontalOptions="CenterAndExpand" />
+            <BoxView Color="Green"></BoxView>
             
+            <Grid BackgroundColor="Red" >
+                <Grid.RowDefinitions>
+                    <RowDefinition  Height="12"/>
+                </Grid.RowDefinitions>
+            </Grid>
         </StackLayout>
+        
     </ContentPage.Content>
 </ContentPage>
