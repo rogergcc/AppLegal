@@ -6,8 +6,9 @@
              >
 
     <StackLayout Orientation="Vertical"
+                 BackgroundColor="Black"
             >
-            <Label Text="Usuariossss"
+            <Label Text="Usuariosss"
                 VerticalOptions="Start" 
                 HorizontalOptions="CenterAndExpand" />
         <Button

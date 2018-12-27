@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:AppLegal;assembly=AppLegal"
+   
+             x:Class="AppLegal.Views.MenuPage">
+    <ContentPage.Content>
+        <ListView 
+                CachingStrategy="RecycleElement"
+                SeparatorColor="Transparent"
+                HasUnevenRows="True"
+                x:Name="ListViewMenu">
+            <ListView.Header>
+                <Grid HorizontalOptions="FillAndExpand"
+                      VerticalOptions="FillAndExpand">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="5"/>
+                    </Grid.RowDefinitions>
+                    <Image Source="{local:ImageResourceExtension AppLegal.menubackground.png}"
+                          Aspect="AspectFill"
+                           Grid.RowSpan="5"
+                           Grid.ColumnSpan="4"
+                           HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"></Image>
+
+                    <Image
+                            
+                            Source="{local:ImageResourceExtension AppLegal.usuario.png}"
+                            Grid.ColumnSpan="4"
+                            Grid.Row="1"
+                            HorizontalOptions="Center"
+                            VerticalOptions="End"/>
+                    <Label 
+                        Grid.ColumnSpan="4"
+                            Grid.Row="2"
+                            HorizontalOptions="FillAndExpand"
+                        HorizontalTextAlignment="Center"
+                        TextColor="White"
+                            Text="{Binding Title}"/>
+
+
+
+                </Grid>
+            </ListView.Header>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <StackLayout Orientation="Vertical">
+                            <Grid Padding="20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Image Source="{Binding Icon}" WidthRequest="40" HeightRequest="40" />
+                                <Label Grid.Column="1" Text="{Binding Title}" TextColor="Black"  VerticalOptions="Center"/>
+                            </Grid>
+                            <BoxView HeightRequest="1" Color="#ACA7A7" IsVisible="{Binding IsSeparatorVisible}"/>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </ContentPage.Content>
+</ContentPage>
