@@ -65,7 +65,9 @@ namespace AppLegal
             //};
             #endregion fin lista Cards
 
-            MainPage = new Login(); ///login
+            //MainPage = new Login(); ///login
+            App.Current.MainPage = new Login();
+            //MainPage = new NavigationPage(new Login());
             //MainPage = new RootPage(); //Navigation Drawer
 
             //MainPage = new MainPage();

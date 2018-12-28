@@ -33,7 +33,7 @@
 
                     <Image
                             
-                            Source="{local:ImageResourceExtension AppLegal.usuario.png}"
+                            Source="{local:ImageResourceExtension AppLegal.Images.usuario.png}"
                             Grid.ColumnSpan="4"
                             Grid.Row="1"
                             HorizontalOptions="Center"
@@ -54,12 +54,12 @@
                 <DataTemplate>
                     <ViewCell>
                         <StackLayout Orientation="Vertical">
-                            <Grid Padding="20">
+                            <Grid Padding="10">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <Image Source="{Binding Icon}" WidthRequest="40" HeightRequest="40" />
+                                <Image Source="{local:ImageResourceExtension AppLegal.Images.usuario.png}" WidthRequest="40" HeightRequest="40" />
                                 <Label Grid.Column="1" Text="{Binding Title}" TextColor="Black"  VerticalOptions="Center"/>
                             </Grid>
                             <BoxView HeightRequest="1" Color="#ACA7A7" IsVisible="{Binding IsSeparatorVisible}"/>

@@ -20,7 +20,7 @@ namespace AppLegal.Views
 
         private async void IngresarLoginAsync(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new RootPage());
+            App.Current.MainPage = new RootPage();
         }
 
        

@@ -170,6 +170,9 @@
     <PackageReference Include="Xam.Plugin.Geolocator">
       <Version>4.5.4-beta</Version>
     </PackageReference>
+    <PackageReference Include="Xam.Plugins.Forms.ImageCircle">
+      <Version>3.0.0.6-beta</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Essentials">
       <Version>0.11.0-preview</Version>
     </PackageReference>

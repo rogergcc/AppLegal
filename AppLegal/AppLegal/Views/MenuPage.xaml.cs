@@ -30,7 +30,7 @@ namespace AppLegal.Views
             BindingContext = new BaseViewModel
             {
                 //Subtitle = App.User.FirstName+" "+ App.User.LastName,
-                Title = "Xamarin Test",
+                Title = "Usuario",
                 //Icon = "slideout.png"
 
             };
@@ -42,7 +42,7 @@ namespace AppLegal.Views
                    new Models.MenuItem { Title = "Dashboard", MenuType = MenuType.Dashboard, Icon ="dashboard.png" },
                    new Models.MenuItem { Title = "EditProfile", MenuType = MenuType.EditProfile, Icon ="Editprofile.png", IsSeparatorVisible = true },
                    new Models.MenuItem { Title = "Forgot Password", MenuType = MenuType.ForgotPassword, Icon ="ForgotPassword.png" },
-                   new Models.MenuItem { Title = "Logout", MenuType = MenuType.Signout, Icon ="logout.png" },
+                   new Models.MenuItem { Title = "Salir", MenuType = MenuType.Signout, Icon ="log_out.png" },
                 };
 
             ListViewMenu.SelectedItem = menuItems[0];

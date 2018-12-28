@@ -64,7 +64,7 @@ namespace AppLegal.Views.Base
                             // DependencyService.Get<INotification>().UnRegisterNotification();
                             //App.Database.DropTable();
                             
-                            App.Current.MainPage = new Dashboard.DashboardPage();
+                            App.Current.MainPage = new Login();
                             break;
                     }
                 }

@@ -19,7 +19,7 @@ namespace AppLegal.Models
         public Zonas()
         {
         }
-
+        
         public Zonas(string zonaTrabajoId, string descripcion, string usuarioID, string direccion, string latitud, string longitud, string radio, string dentroZona, string estado)
         {
             ZonaTrabajoId = zonaTrabajoId;
