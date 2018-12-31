@@ -4,10 +4,11 @@
              x:Class="AppLegal.Views.Dashboard.DashboardPage">
     <ContentPage.Content>
         <StackLayout>
-            <ListView x:Name="Post_List">
-                <ListView.ItemTemplate>
+            <ListView x:Name="Post_List" >
+                <ListView.ItemTemplate >
                     <DataTemplate>
-                        <TextCell Text="{Binding Descripcion}" Detail="{Binding Descripcion}" />
+                        <TextCell Text="{Binding ZonaTrabajoId}" Detail="{Binding Descripcion}"
+                                  TextColor="DarkBlue" DetailColor="Black"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

@@ -25,15 +25,15 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="5"/>
                     </Grid.RowDefinitions>
-                    <Image Source="{local:ImageResourceExtension AppLegal.menubackground.png}"
-                          Aspect="AspectFill"
+                    <Image Source="{local:ImageResourceExtension AppLegal.Images.menubackground.png}"
+                            Aspect="AspectFill"
                            Grid.RowSpan="5"
                            Grid.ColumnSpan="4"
                            HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"></Image>
 
                     <Image
-                            
                             Source="{local:ImageResourceExtension AppLegal.Images.usuario.png}"
+                            Aspect="AspectFill"
                             Grid.ColumnSpan="4"
                             Grid.Row="1"
                             HorizontalOptions="Center"

@@ -12,7 +12,7 @@ namespace AppLegal.Views.Dashboard
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class DashboardPage : ContentPage
 	{
-        private const string url = "http://192.168.0.12/legal/ZonaTrabajo/ZonaTrabajoListarJsonExterno?id=2";
+        private const string url = "http://192.168.1.38/legal/ZonaTrabajo/ZonaTrabajoListarJsonExterno?id=2";
         private HttpClient _Client = new HttpClient();
         private ObservableCollection<Zona> _post;
         public MainPageViewModel ViewModel { get; set; }
