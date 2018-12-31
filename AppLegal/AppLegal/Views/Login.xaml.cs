@@ -1,4 +1,5 @@
-﻿using AppLegal.Views.Base;
+﻿using AppLegal.ViewModel;
+using AppLegal.Views.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,9 @@ namespace AppLegal.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class Login : ContentPage
 	{
-		public Login ()
+        public MainPageViewModel ViewModel { get; set; }
+
+        public Login ()
 		{
 			InitializeComponent();
 		}
@@ -22,7 +25,13 @@ namespace AppLegal.Views
         {
             App.Current.MainPage = new RootPage();
         }
-
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            ViewModel = new MainPageViewModel();
+            this.BindingContext = ViewModel;
+            await ViewModel.LoadZonas();
+        }
        
     }
 }

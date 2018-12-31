@@ -9,14 +9,14 @@ namespace AppLegal.ViewModel
 {
     public class MainPageViewModel : BaseViewModel
     {
-        public ObservableCollection<Zonas> Zonas { get; set; }
+        public ObservableCollection<Zona> Zonas { get; set; }
         public async Task LoadZonas()
         {
-            var url = "";
-            //http://192.168.1.38/legal/ZonaTrabajo/ZonaTrabajoListarJsonExterno?id=2
+            var url = "http://192.168.0.12/legal/ZonaTrabajo/ZonaTrabajoListarJsonExterno?id=2";
+           
             var service = new RestClient<Zonas>();
             var zonas = await service.GetRestServicieDataAsync(url);
-
+            Zonas = new ObservableCollection<Zona>(zonas.zonas);
         }
     }
 }

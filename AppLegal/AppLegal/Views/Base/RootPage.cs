@@ -28,6 +28,10 @@ namespace AppLegal.Views.Base
             //setup home page
             NavigateAsync(MenuType.Dashboard);
 
+            
+
+            
+
             InvalidateMeasure();
         }
 
