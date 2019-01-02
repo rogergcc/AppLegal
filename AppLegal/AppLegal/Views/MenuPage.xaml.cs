@@ -30,7 +30,7 @@ namespace AppLegal.Views
             BindingContext = new BaseViewModel
             {
                 //Subtitle = App.User.FirstName+" "+ App.User.LastName,
-                Title = "Usuario",
+                Title = App.Current.Properties["usuarioNombre"].ToString(),
                 //Icon = "slideout.png"
 
             };
@@ -39,10 +39,10 @@ namespace AppLegal.Views
             ListViewMenu.ItemsSource = menuItems = new List<Models.MenuItem>
                 {
                    new Models.MenuItem { Title = "Home", MenuType = MenuType.Dashboard, Icon ="home.png" },
-                   new Models.MenuItem { Title = "Dashboard", MenuType = MenuType.Dashboard, Icon ="dashboard.png" },
-                   new Models.MenuItem { Title = "EditProfile", MenuType = MenuType.EditProfile, Icon ="Editprofile.png", IsSeparatorVisible = true },
-                   new Models.MenuItem { Title = "Forgot Password", MenuType = MenuType.ForgotPassword, Icon ="ForgotPassword.png" },
-                   new Models.MenuItem { Title = "Salir", MenuType = MenuType.Signout, Icon ="log_out.png" },
+                   new Models.MenuItem { Title = "Documentos", MenuType = MenuType.Dashboard, Icon ="docs.png",IsSeparatorVisible = true },
+                   //new Models.MenuItem { Title = "EditProfile", MenuType = MenuType.EditProfile, Icon ="Editprofile.png", IsSeparatorVisible = true },
+                   //new Models.MenuItem { Title = "Forgot Password", MenuType = MenuType.ForgotPassword, Icon ="ForgotPassword.png" },
+                   new Models.MenuItem { Title = "Salir", MenuType = MenuType.Signout, Icon ="logout.png" },
                 };
 
             ListViewMenu.SelectedItem = menuItems[0];

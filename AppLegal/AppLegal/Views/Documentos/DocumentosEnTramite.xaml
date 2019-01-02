@@ -1,21 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="AppLegal.Views.Dashboard.DashboardPage"
-             Title="Status Documento">
-    <ContentPage.Content
-        
-        >
-        <StackLayout
-           >
-            <ListView x:Name="Estados_List" >
+             x:Class="AppLegal.Views.Documentos.DocumentosEnTramite"
+             
+             Title="{Binding Nombre}"
+             >
+    <ContentPage.Content>
+        <StackLayout>
+            <ListView x:Name="EstadosDocumentosEnTramite_List" >
                 <ListView.ItemTemplate >
                     <DataTemplate>
                         <TextCell Text="{Binding Nombre}" 
                                   TextColor="Black"
                                  />
                     </DataTemplate>
-                   
+
                 </ListView.ItemTemplate>
             </ListView>
         </StackLayout>

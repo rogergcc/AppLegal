@@ -1,4 +1,5 @@
-﻿using AppLegal.Views;
+﻿using AppLegal.IViewModel;
+using AppLegal.Views;
 using AppLegal.Views.Base;
 using Plugin.FirebasePushNotification;
 using System;
@@ -8,13 +9,16 @@ using Xamarin.Forms.Xaml;
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace AppLegal
 {
-    public partial class App : Application
+    public partial class App : Application, ILoginManager
     {
         public static double ScreenHeight;
         public static double ScreenWidth;
+        public static App Current;
+        static ILoginManager loginManager;
         public App()
         {
             InitializeComponent();
+            //var isLoggedIn = Properties.ContainsKey("IsLoggedIn") ? (bool)Properties["IsLoggedIn"] : false;
             #region Lista y Cards
             //var cards = new CardData();
 
@@ -65,8 +69,20 @@ namespace AppLegal
             //};
             #endregion fin lista Cards
 
+            Current = this;
+
+            var isLoggedIn = Properties.ContainsKey("IsLoggedIn") ? (bool)Properties["IsLoggedIn"] : false;
+
+            // we remember if they're logged in, and only display the login page if they're not
+            if (isLoggedIn)
+                App.Current.MainPage = new RootPage();
+            else
+                App.Current.MainPage = new Login(this);
+
             //MainPage = new Login(); ///login
-            App.Current.MainPage = new Login();
+
+            //App.Current.MainPage = new Login(); //LOGIN
+
             //MainPage = new NavigationPage(new Login());
             //MainPage = new RootPage(); //Navigation Drawer
 
@@ -97,5 +113,20 @@ namespace AppLegal
             //};
         }
 
+        public void ShowMainPage()
+        {
+
+            App.Current.MainPage = new RootPage();
+        }
+
+        public void Logout()
+        {
+            Properties["IsLoggedIn"] = false; // only gets set to 'true' on the LoginPage
+            Properties["usuarioId"] = "";
+            Properties["usuarioNombre"] = "";
+            Properties["rol"] = "";
+            Properties["empleadoId"] = "";
+            App.Current.MainPage = new Login(this);
+        }
     }
 }

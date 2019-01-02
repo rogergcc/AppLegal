@@ -54,21 +54,23 @@ namespace AppLegal.Views.Base
                         case MenuType.Dashboard:
                             Pages.Add(id, new CustomNavigationPage(new DashboardPage()));
                             break;
-                        case MenuType.EditProfile:
-                            Pages.Add(id, new CustomNavigationPage(new Dashboard.DashboardPage()));
-                            IsPresented = false;
 
-                            break;
-                        case MenuType.ForgotPassword:
-                            Pages.Add(id, new CustomNavigationPage(new Dashboard.DashboardPage()));
-                            break;
+                        //case MenuType.EditProfile:
+                        //    Pages.Add(id, new CustomNavigationPage(new Dashboard.DashboardPage()));
+                        //    IsPresented = false;
+
+                        //    break;
+
+                        //case MenuType.ForgotPassword:
+                        //    Pages.Add(id, new CustomNavigationPage(new Dashboard.DashboardPage()));
+                        //    break;
 
                         case MenuType.Signout:
                             Pages.Clear();
                             // DependencyService.Get<INotification>().UnRegisterNotification();
                             //App.Database.DropTable();
-                            
-                            App.Current.MainPage = new Login();
+                            App.Current.Logout();
+                            //App.Current.MainPage = new Login(App.Current);
                             break;
                     }
                 }
