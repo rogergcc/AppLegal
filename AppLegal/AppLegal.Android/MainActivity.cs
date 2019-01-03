@@ -40,10 +40,11 @@ namespace AppLegal.Droid
             
 
             base.OnCreate(savedInstanceState);
-            
+
             //RequestPermissions(PermissionsLocation, RequestLocationId);
 
             //SetContentView(Resource.Layout.activity_maps);
+            Rg.Plugins.Popup.Popup.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(ApplicationContext, savedInstanceState);
 
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
@@ -64,7 +65,7 @@ namespace AppLegal.Droid
             LoadApplication(new App());
             FirebasePushNotificationManager.ProcessIntent(this, Intent);
             var refreshedToken = FirebaseInstanceId.Instance.Token;
-
+            
         }
         public string GetIMEI()
         {

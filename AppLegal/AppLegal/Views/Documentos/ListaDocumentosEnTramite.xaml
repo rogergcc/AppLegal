@@ -1,12 +1,58 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="AppLegal.Views.Documentos.ListaDocumentosEnTramite">
+             x:Class="AppLegal.Views.Documentos.ListaDocumentosEnTramite"
+             Title="{Binding Nombre}"
+             xmlns:local="clr-namespace:AppLegal">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <ListView x:Name="DocumentosEnTramite_List" HasUnevenRows="True">
+                <ListView.ItemTemplate >
+                    <DataTemplate>
+                       <!--
+                        <TextCell Text="{Binding Nemonico}" 
+                                  TextColor="Black"
+                                 />
+                        -->
+                        <ViewCell >
+                            <ViewCell.View>
+                                <StackLayout Padding="20,0">
+                                    <Label TextColor="Black" Text="{Binding Nemonico}" 
+                                           Margin="20, 10" 
+                                           VerticalOptions="Center" 
+                                           HorizontalOptions="Start"></Label>
+                                    <Label TextColor="Brown" 
+                                           VerticalOptions="Center"
+                                           HorizontalOptions="End"
+                                           Text="{Binding FechaRegistroString}">
+                                    </Label>
+                                </StackLayout>
+                            </ViewCell.View>
+                        </ViewCell>
+                    </DataTemplate>
+
+                </ListView.ItemTemplate>
+            </ListView>
+            <!--
+            <ContentView x:Name="popupListView" BackgroundColor="#C0808080" 
+                         Padding="10, 0" 
+                         IsVisible="false" 
+                         VerticalOptions="Center">
+                <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                    <StackLayout Orientation="Vertical" 
+                                 HeightRequest="200" 
+                                 WidthRequest="300" BackgroundColor="White">
+                        <Label x:Name="DocumentoId" FontSize="16">
+                        </Label>
+                        <Label x:Name="Status" FontSize="13">
+                        </Label>
+                        <Label x:Name="SubTipoServicio" FontSize="12">
+                        </Label>
+                    </StackLayout>
+                </StackLayout>
+            </ContentView>
+            -->
+            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

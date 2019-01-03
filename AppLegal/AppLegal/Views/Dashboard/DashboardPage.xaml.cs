@@ -33,17 +33,10 @@ namespace AppLegal.Views.Dashboard
                     {
                         await Navigation.PushAsync(documentosEnTramite);
                     }
-                    //if (estadoProcesoViewHolder.getNombre().equals("EN TRAMITE")){
-                    //    Intent intentTramite = new Intent(v.getContext(), DocumentosActivity.class);
-                    //    intentTramite.putExtras(bundle);
-                    //    v.getContext().startActivity(intentTramite);
-                    //}else{
-                    //    Intent newDDocumentsActivity = new Intent(v.getContext(), DetalleDocumentosActivity.class);
-                    //    newDDocumentsActivity.putExtras(bundle);
-                    //    v.getContext().startActivity(newDDocumentsActivity);
-                    //}
+                    else{
+                        
+                    }
                     
-
                     Estados_List.SelectedItem = null;
                 }
             };

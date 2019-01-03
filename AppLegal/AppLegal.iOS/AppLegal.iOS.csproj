@@ -164,6 +164,9 @@
     <PackageReference Include="Plugin.Permissions">
       <Version>4.0.2-beta</Version>
     </PackageReference>
+    <PackageReference Include="Rg.Plugins.Popup">
+      <Version>1.1.5.180</Version>
+    </PackageReference>
     <PackageReference Include="Xam.Plugin.DeviceInfo">
       <Version>4.0.0.13</Version>
     </PackageReference>

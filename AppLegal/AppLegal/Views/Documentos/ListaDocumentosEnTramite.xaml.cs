@@ -1,7 +1,12 @@
 ﻿using AppLegal.Models;
+using AppLegal.Views.PopUp;
 using Newtonsoft.Json;
+using Rg.Plugins.Popup.Animations;
+using Rg.Plugins.Popup.Enums;
+using Rg.Plugins.Popup.Services;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -22,7 +27,9 @@ namespace AppLegal.Views.Documentos
         string rol = App.Current.Properties["rol"].ToString();
         string empleadoId = App.Current.Properties["empleadoId"].ToString();
 
+        int estadoId = 0;
         string estadoNom = "";
+        ObservableCollection<Documento.Datum> docDatas;
         private HttpClient _Client = new HttpClient();
         public void DocumentoPorEspecialistaListarExternoJson()
         {
@@ -57,52 +64,122 @@ namespace AppLegal.Views.Documentos
         }
         public ListaDocumentosEnTramite(EstadoProceso estado)
         {
-            var estadoid = estado.EstadoProcesoId;
-            estadoNom = estado.Nombre;
+           
             InitializeComponent();
-            
-            //DocumentoPorEspecialistaListarExternoJson();
+            estadoId = estado.EstadoProcesoId;
+            estadoNom = estado.Nombre;
+            BindingContext = estado;
 
+            DocumentosEnTramite_List.ItemSelected += (sender, e) =>
+            {
+                if (e.SelectedItem != null)
+                {
+                    //popupListView.IsVisible = true;
+                    
+                    var documentoSeleccionado = new Documento.Datum();
+                    documentoSeleccionado = (Documento.Datum)e.SelectedItem;
+
+                    //todo poup
+                    var animationPopup = new PopupPageDoc(e.SelectedItem as Documento.Datum);
+                    
+                    //PopupNavigation.Instance.PushAsync(new PopupPageDoc());
+                    var scaleAnimation = new ScaleAnimation
+                    {
+                        PositionIn = MoveAnimationOptions.Top,
+                        PositionOut = MoveAnimationOptions.Bottom,
+                        ScaleIn = 1.2,
+                        ScaleOut = 0.8,
+                        DurationIn = 400,
+                        DurationOut = 800,
+                        EasingIn = Easing.BounceIn,
+                        EasingOut = Easing.CubicOut,
+                        HasBackgroundAnimation = false
+                    };
+
+                    animationPopup.Animation = scaleAnimation;
+                    //PopupNavigation.PushAsync(animationPopup);
+                    PopupNavigation.Instance.PushAsync(animationPopup);
+
+                   
+
+                    //DocumentoId.Text = documentoSeleccionado.DocumentoId.ToString();
+
+                    //Status.Text = documentoSeleccionado.Status;
+                    //SubTipoServicio.Text = documentoSeleccionado.SubTipoServicio;
+
+                    //DocumentosEnTramite_List.SelectedItem = null;
+                }
+            };
+            //DocumentoPorEspecialistaListarExternoJson();
+            
         }
         protected override async void OnAppearing()
         {
             String IP_LEGAL = "http://192.168.1.40";
             Documento documento = new Documento();
-            if (estadoNom.Equals("STATUS TRAMITE"))
+            
+            if (estadoNom.Equals("POR APROBAR"))
             {
-                var client = new HttpClient();
-                client.BaseAddress = new Uri("http://192.168.1.40/legal/RevisionDocumento/ListarDocumentosPorControlStatusApp");
+                String servicio = "";
+                if (rol.Equals("1003") || rol.Equals("1004"))
+                {
+                    servicio = "DocumentoPorResponsableRevisionListarExternoJson";
+                }
+                else
+                {
+                    servicio = "DocumentoPorEspecialistaListarExternoJson";
+                }
+                
+                //String url = IP_LEGAL + "/legal/RevisionDocumento/ListarDocumentosPorControlStatusApp";
+                String url = IP_LEGAL + "/legal/Documento/" + servicio + "?estadoProcesoId=" + estadoId + "&usuarioId=" + usuarioId;
+                var service = new RestClient<Documento>();
+                documento = await service.GetRestServicieDataAsync(url);
+                ObservableCollection<Documento.Datum> docDatas = new ObservableCollection<Documento.Datum>(documento.data);
+                DocumentosEnTramite_List.ItemsSource = docDatas;
+            }
+            else if (estadoNom.Equals("APROBADOS"))
+            {
+                var post = new
+                {
+                    empleadoId = empleadoId,
+                    perfil = rol
+                };
+                String url = IP_LEGAL + "/legal/RevisionDocumento/ListarDocumentosAprobadosApp";
+                //String url = IP_LEGAL + "/legal/RevisionDocumento/ListarDocumentosPorControlStatusApp";
+                var service = new RestClient<Documento>();
+                documento = await service.GetRestServicieDataPostAsync(url, post);
+                ObservableCollection<Documento.Datum> docDatas = new ObservableCollection<Documento.Datum>(documento.data);
+                DocumentosEnTramite_List.ItemsSource = docDatas;
+            }
+            else if (estadoNom.Equals("RECHAZADOS"))
+            {
+                var post = new
+                {
+                    empleadoId = empleadoId,
+                    perfil = rol
+                };
+                String url = IP_LEGAL + "/legal/RevisionDocumento/ListarDocumentosRechazadosApp";
 
-                var login = new
+                //String url = IP_LEGAL + "/legal/RevisionDocumento/ListarDocumentosPorControlStatusApp";
+                var service = new RestClient<Documento>();
+                documento = await service.GetRestServicieDataPostAsync(url, post);
+                ObservableCollection<Documento.Datum> docDatas = new ObservableCollection<Documento.Datum>(documento.data);
+                DocumentosEnTramite_List.ItemsSource = docDatas;
+            }
+            else if (estadoNom.Equals("STATUS TRAMITE"))
+            {
+                var post = new
                 {
                     empleadoId = empleadoId
-
                 };
-                var json = JsonConvert.SerializeObject(login);
-                HttpContent httpContent = new StringContent(json);
-                httpContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                String url = IP_LEGAL + "/legal/RevisionDocumento/ListarDocumentosPorControlStatusApp";
+                var service = new RestClient<Documento>();
+                documento = await service.GetRestServicieDataPostAsync(url, post);
+                docDatas = new ObservableCollection<Documento.Datum>(documento.data);
+                DocumentosEnTramite_List.ItemsSource = docDatas;
 
-                var response = await client.PostAsync(client.BaseAddress, httpContent);
-                if (response.IsSuccessStatusCode)
-                {
-
-                }
-
-                String url = IP_LEGAL + "/legal/RevisionDocumento/ListarDocumentosPorControlStatusApp?empleadoId=" + empleadoId;
-
-
-                var respuestaGetJson = await response.Content.ReadAsStringAsync();
-                var settings = new JsonSerializerSettings
-                {
-                    NullValueHandling = NullValueHandling.Ignore,
-                    MissingMemberHandling = MissingMemberHandling.Ignore
-                };
-                documento = JsonConvert.DeserializeObject<Documento>(respuestaGetJson, settings);
-                //documento = await service.GetRestServicieDataAsync(url);
-                
             }
 
-            
             base.OnAppearing();
         }
     }
