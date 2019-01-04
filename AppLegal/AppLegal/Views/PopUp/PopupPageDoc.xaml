@@ -4,15 +4,48 @@
     xmlns:popup="clr-namespace:Rg.Plugins.Popup.Pages;assembly=Rg.Plugins.Popup"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="AppLegal.Views.PopUp.PopupPageDoc">
-    <StackLayout Padding="20,20,20,20"
-                 HorizontalOptions="Center"
-                 VerticalOptions="Center">
-    <Label x:Name="DocumentoId" FontSize="16">
-    </Label>
-    <Label x:Name="Status" FontSize="13">
-    </Label>
-    <Label x:Name="SubTipoServicio" FontSize="12">
-    </Label>
+
+    
+    <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Padding="0" Margin="0">
+        <Frame WidthRequest="270" HeightRequest="150" Padding="15">
+            <StackLayout>
+                <Label x:Name="NombreArchivo" FontSize="13" HorizontalOptions="Center" 
+                       Margin="2">
+                </Label>
+                <Label x:Name="Nemonico" FontSize="14" Text="Nemonico: " HorizontalOptions="Center" 
+                       Margin="2">
+                </Label>
+
+                <Label x:Name="SubTipoServicio" FontSize="12" Text="Tipo Contrato: " TextColor="Brown" 
+                       HorizontalOptions="Center" Margin="2"> 
+                </Label>
+
+                <Label x:Name="Fecha" FontSize="12" TextColor="Brown" 
+                       HorizontalOptions="Center" Margin="2">
+                </Label>
+                <!--    
+                <Button Text="Aprobar" BackgroundColor="#1094a1" HeightRequest="35" TextColor="White"></Button>
+                -->
+            </StackLayout>
+        </Frame>
+        <!--
+        <Grid RowSpacing="0" ColumnSpacing="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+               
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+           
+            
+            <Label Text="Hello!" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="1"
+        HorizontalOptions="FillAndExpand" HorizontalTextAlignment="Center"
+        BackgroundColor="Brown" TextColor="White" />
+            
+        </Grid>
+        -->
     </StackLayout>
 </popup:PopupPage>    
     

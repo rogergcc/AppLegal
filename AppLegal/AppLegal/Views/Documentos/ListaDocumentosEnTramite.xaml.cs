@@ -70,46 +70,7 @@ namespace AppLegal.Views.Documentos
             estadoNom = estado.Nombre;
             BindingContext = estado;
 
-            DocumentosEnTramite_List.ItemSelected += (sender, e) =>
-            {
-                if (e.SelectedItem != null)
-                {
-                    //popupListView.IsVisible = true;
-                    
-                    var documentoSeleccionado = new Documento.Datum();
-                    documentoSeleccionado = (Documento.Datum)e.SelectedItem;
-
-                    //todo poup
-                    var animationPopup = new PopupPageDoc(e.SelectedItem as Documento.Datum);
-                    
-                    //PopupNavigation.Instance.PushAsync(new PopupPageDoc());
-                    var scaleAnimation = new ScaleAnimation
-                    {
-                        PositionIn = MoveAnimationOptions.Top,
-                        PositionOut = MoveAnimationOptions.Bottom,
-                        ScaleIn = 1.2,
-                        ScaleOut = 0.8,
-                        DurationIn = 400,
-                        DurationOut = 800,
-                        EasingIn = Easing.BounceIn,
-                        EasingOut = Easing.CubicOut,
-                        HasBackgroundAnimation = false
-                    };
-
-                    animationPopup.Animation = scaleAnimation;
-                    //PopupNavigation.PushAsync(animationPopup);
-                    PopupNavigation.Instance.PushAsync(animationPopup);
-
-                   
-
-                    //DocumentoId.Text = documentoSeleccionado.DocumentoId.ToString();
-
-                    //Status.Text = documentoSeleccionado.Status;
-                    //SubTipoServicio.Text = documentoSeleccionado.SubTipoServicio;
-
-                    //DocumentosEnTramite_List.SelectedItem = null;
-                }
-            };
+            
             //DocumentoPorEspecialistaListarExternoJson();
             
         }
@@ -180,6 +141,47 @@ namespace AppLegal.Views.Documentos
 
             }
 
+            DocumentosEnTramite_List.ItemSelected += async (sender, e) =>
+            {
+                if (e.SelectedItem != null)
+                {
+                    //popupListView.IsVisible = true;
+
+                    var documentoSeleccionado = new Documento.Datum();
+                    documentoSeleccionado = (Documento.Datum)e.SelectedItem;
+
+                    //todo poup
+                    var animationPopup = new PopupPageDoc(e.SelectedItem as Documento.Datum);
+
+                    //PopupNavigation.Instance.PushAsync(new PopupPageDoc());
+                    var scaleAnimation = new ScaleAnimation
+                    {
+                        PositionIn = MoveAnimationOptions.Bottom,
+                        PositionOut = MoveAnimationOptions.Bottom,
+                        ScaleIn = 1,
+                        ScaleOut = 1,
+                        //DurationIn = 400,
+                        //DurationOut = 800,
+                        EasingIn = Easing.Linear,
+                        //EasingOut = Easing.CubicOut,
+                        HasBackgroundAnimation = true,
+                        //<animations:ScaleAnimation PositionIn="Bottom" PositionOut="Center" ScaleIn="1" ScaleOut="0.7" DurationIn="700" EasingIn="BounceOut"/>
+                    };
+
+                    animationPopup.Animation = scaleAnimation;
+                    //PopupNavigation.PushAsync(animationPopup);
+                    await PopupNavigation.Instance.PushAsync(animationPopup);
+
+
+
+                    //DocumentoId.Text = documentoSeleccionado.DocumentoId.ToString();
+
+                    //Status.Text = documentoSeleccionado.Status;
+                    //SubTipoServicio.Text = documentoSeleccionado.SubTipoServicio;
+
+                    DocumentosEnTramite_List.SelectedItem = null;
+                }
+            };
             base.OnAppearing();
         }
     }

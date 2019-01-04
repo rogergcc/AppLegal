@@ -13,17 +13,25 @@ namespace AppLegal.Views.PopUp
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class PopupPageDoc 
 	{
-		public PopupPageDoc (Documento.Datum documentoSeleccionado)
+        Documento.Datum datum { get; set; }
+        public PopupPageDoc (Documento.Datum documentoSeleccionado)
 		{
-            DocumentoId.Text = documentoSeleccionado.DocumentoId.ToString();
+            
+            datum = documentoSeleccionado;
+            //DocumentoId.Text = datum.DocumentoId.ToString();
             //https://xamarinlatino.com/como-trabajar-con-ventanas-emergentes-pop-up-avanzados-en-xamarin-forms-7ebe109b0a37
             //https://www.youtube.com/watch?v=dOU0Qei3Qlk&t=438s
 
-            Status.Text = documentoSeleccionado.Status;
-            SubTipoServicio.Text = documentoSeleccionado.SubTipoServicio;
+            
 
            
             InitializeComponent();
-		}
-	}
+            datum = documentoSeleccionado;
+            Nemonico.Text += datum.Nemonico.ToString();
+            
+            NombreArchivo.Text += documentoSeleccionado.NombreArchivo.ToString();
+            SubTipoServicio.Text += documentoSeleccionado.SubTipoServicio.ToString();
+            Fecha.Text = documentoSeleccionado.FechaRegistroString;
+        }
+    }
 }

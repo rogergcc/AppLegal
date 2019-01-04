@@ -118,14 +118,14 @@ namespace AppLegal.Views
             }
             
         }
-        protected override async void OnAppearing()
+        protected override void OnAppearing()
         {
             base.OnAppearing();
-            ViewModel = new MainPageViewModel();
-            this.BindingContext = ViewModel;
-            await ViewModel.LoadZonas();
+            //ViewModel = new MainPageViewModel();
+            //this.BindingContext = ViewModel;
+            //await ViewModel.LoadZonas();
         }
 
-       
+
     }
 }
