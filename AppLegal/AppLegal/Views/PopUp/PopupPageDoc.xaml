@@ -7,7 +7,7 @@
 
     
     <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Padding="0" Margin="0">
-        <Frame WidthRequest="270" HeightRequest="150" Padding="15">
+        <Frame WidthRequest="270" HeightRequest="200" Padding="15">
             <StackLayout>
                 <Label x:Name="NombreArchivo" FontSize="13" HorizontalOptions="Center" 
                        Margin="2">
@@ -26,6 +26,17 @@
                 <!--    
                 <Button Text="Aprobar" BackgroundColor="#1094a1" HeightRequest="35" TextColor="White"></Button>
                 -->
+                <Button x:Name="btnAprobarDocumento"
+                        Text="APROBAR DOCUMENTO" BackgroundColor="DarkGoldenrod" 
+                        HeightRequest="35" 
+                        Clicked="aprobarDocumentoAsync"
+                        VerticalOptions="CenterAndExpand"
+                        TextColor="White"></Button>
+                <Button x:Name="btnCancelarDocumento"
+                        Text="RECHAZAR DOCUMENTO" BackgroundColor="OrangeRed" 
+                        HeightRequest="35" 
+                        VerticalOptions="CenterAndExpand"
+                        TextColor="White"></Button>
             </StackLayout>
         </Frame>
         <!--
