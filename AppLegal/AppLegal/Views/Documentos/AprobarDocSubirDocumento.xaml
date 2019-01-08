@@ -1,16 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="AppLegal.Views.Documentos.AprobarDocSubirDocumento">
+             x:Class="AppLegal.Views.Documentos.AprobarDocSubirDocumento"
+             Title="{Binding nombre}">
     <ContentPage.Content>
         <StackLayout>
             
             <Image x:Name="Imagen"
                    HeightRequest="240"
                 ></Image>
-            <Button Clicked="btnSubiDocumento"
-                Text="Subir Documento">
+            
+            <Button Clicked="btnElegirDocumento"
+                    Image=""
+                Text="Elegir Documento">
                 
+            </Button>
+
+            <Button Clicked="btnSubirDocumentoAsync"
+                Text="Subir Documento">
+
             </Button>
         </StackLayout>
     </ContentPage.Content>

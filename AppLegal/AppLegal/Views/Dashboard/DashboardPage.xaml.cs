@@ -34,7 +34,11 @@ namespace AppLegal.Views.Dashboard
                         await Navigation.PushAsync(documentosEnTramite);
                     }
                     else{
-                        
+                        //DOC SEGUN ESTADO
+
+                        var documentos = new ListaDocumentosEnTramite(e.SelectedItem as EstadoProceso);
+
+                        await Navigation.PushAsync(documentos);
                     }
                     
                     Estados_List.SelectedItem = null;
@@ -48,7 +52,7 @@ namespace AppLegal.Views.Dashboard
             var content = await _Client.GetStringAsync(url);
             var service = new RestClient<Zonas>();
             var zonas = await service.GetRestServicieDataAsync(url);
-            _post = new ObservableCollection<Zona>(zonas.zonas);
+            //_post = new ObservableCollection<Zona>(zonas.zonas);
 
             ObservableCollection<EstadoProceso> estadoProcesos = new ObservableCollection<EstadoProceso>();
 

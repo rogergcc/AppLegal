@@ -17,6 +17,7 @@ namespace AppLegal.Views.Documentos
         EstadoProceso estado { get; set; }
         public DocumentosEnTramite (EstadoProceso estadoProceso)
 		{
+            //2DA VISTA A
 			InitializeComponent ();
             estado = estadoProceso;
 

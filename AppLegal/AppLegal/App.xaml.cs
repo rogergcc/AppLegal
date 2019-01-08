@@ -68,8 +68,10 @@ namespace AppLegal
             //    BarTextColor = Color.White
             //};
             #endregion fin lista Cards
-
+            
             Current = this;
+
+            Current.Properties["IpPublicado"] = "http://192.168.1.40";
 
             var isLoggedIn = Properties.ContainsKey("IsLoggedIn") ? (bool)Properties["IsLoggedIn"] : false;
 
@@ -108,8 +110,6 @@ namespace AppLegal
             //    {
             //        System.Diagnostics.Debug.WriteLine($"{data.Key} : {data.Value}");
             //    }
-
-
             //};
         }
 
@@ -126,6 +126,7 @@ namespace AppLegal
             Properties["usuarioNombre"] = "";
             Properties["rol"] = "";
             Properties["empleadoId"] = "";
+            Properties["IpPublicado"] = "";
             App.Current.MainPage = new Login(this);
         }
     }

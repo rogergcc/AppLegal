@@ -61,12 +61,12 @@ namespace AppLegal.Views.PopUp
                     rol=rol,
                     documentoNombre=datum.NombreArchivo
                 };
-                var documentosEnTramite = new AprobarDocSubirDocumento(docDatos as object);
+                //var documentosEnTramite = new AprobarDocSubirDocumento(docDatos as object);
                 
                 //await rootPage.Navigation.PushAsync(documentosEnTramite);
                 //await App.Current.MainPage .Navigation.PushAsync(documentosEnTramite);
 
-                App.Current.MainPage = new AprobarDocSubirDocumento(docDatos as object);
+                //App.Current.MainPage = new AprobarDocSubirDocumento(docDatos as object);
 
             }
             else {
