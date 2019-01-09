@@ -47,6 +47,7 @@ namespace AppLegal.Views.Documentos
             String s = Convert.ToBase64String(b);
             //imagenorPdf = ImageSource.FromStream(() => file.GetStream()).ToString();
             imagenorPdf  = Convert.ToBase64String(b);
+            documentoRevision.esImagen = true;
         }
 
         private async void btnSubirDocumentoAsync(object sender, EventArgs e)
@@ -54,13 +55,35 @@ namespace AppLegal.Views.Documentos
             String IP_LEGAL = "http://192.168.1.40";
             String url = IP_LEGAL + "/legal/RevisionDocumento/RevizarDocumentoJson";
             documentoRevision.fileImagenOrPdf = imagenorPdf;
-            documentoRevision.esImagen = true;
+            
             Documento documento = new Documento();
             var service = new RestClient<Documento>();
             documento = await service.GetRestServicieDataPostAsync(url, documentoRevision);
-            var asf="SAF";
+            
             //ObservableCollection<Documento.Datum> docDatas = new ObservableCollection<Documento.Datum>(documento.data);
 
+        }
+
+        private async void btnElegirPdfAsync(object sender, EventArgs e)
+        {
+            try
+            {
+                Plugin.FilePicker.Abstractions.FileData fileData = await Plugin.FilePicker.CrossFilePicker.Current.PickFile();
+                if (fileData == null)
+                    return; // user canceled file picking
+
+                string fileName = fileData.FileName;
+                //string contents = System.Text.Encoding.UTF8.GetString(fileData.DataArray);
+
+                imagenorPdf = Convert.ToBase64String(fileData.DataArray);
+                documentoRevision.esImagen = false;
+                //System.Console.WriteLine("File name chosen: " + fileName);
+                //System.Console.WriteLine("File data: " + contents);
+            }
+            catch (Exception ex)
+            {
+                System.Console.WriteLine("Exception choosing file: " + ex.ToString());
+            }
         }
     }
 }

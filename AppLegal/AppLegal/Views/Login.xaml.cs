@@ -126,6 +126,12 @@ namespace AppLegal.Views
             //await ViewModel.LoadZonas();
         }
 
+        private void BtnIngresarSesionWeb_ClickedAsync(object sender, EventArgs e)
+        {
+            //https://www.c-sharpcorner.com/article/navigation-in-xamarin-forms/
 
+            App.Current.MainPage = new MainPage();
+            //await Navigation.PushAsync(new MainPage());
+        }
     }
 }

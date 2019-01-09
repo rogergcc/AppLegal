@@ -11,15 +11,19 @@
                 ></Image>
             
             <Button Clicked="btnElegirDocumento"
-                    Image=""
-                Text="Elegir Documento">
+                    
+                Text="Elegir Imagen">
+            
+            </Button>
+            <Button Clicked="btnElegirPdfAsync"
+                    Text="Elegir Pdf">
                 
             </Button>
-
             <Button Clicked="btnSubirDocumentoAsync"
                 Text="Subir Documento">
 
             </Button>
+            
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

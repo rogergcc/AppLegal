@@ -19,8 +19,12 @@
 
 
             <Label Text="LEGAL"/>
-                <Image Source="{local:ImageResourceExtension AppLegal.Images.usuario.png}" 
-                       Opacity="0.6" VerticalOptions="Start" Margin="0,3,0,0"/>
+                <!--
+             <Image Source="{local:ImageResourceExtension AppLegal.Images.usuario.png}" 
+                       Opacity="1" VerticalOptions="Start" Margin="0,3,0,0"/>
+                -->
+                <Image Source="usuario.png" 
+                       Opacity="1" VerticalOptions="Start" Margin="0,3,0,0"/>
 
         </StackLayout>
 
@@ -71,7 +75,7 @@
                 </Grid.ColumnDefinitions>
                 <Label BackgroundColor="#bababa" HeightRequest="1" HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
                 <!--<Label Text="" Grid.Column="1" VerticalOptions="Center" Margin="10,0,10,0"/>-->
-                <Image Source="gf.png" Grid.Column="1" VerticalOptions="Center" Margin="10,0,10,0"/>
+                <Image Source="cuenta.png" Grid.Column="1" VerticalOptions="Center" Margin="10,0,10,0"/>
 
 
                 <Label BackgroundColor="#bababa" Grid.Column="2" HeightRequest="1" HorizontalOptions="FillAndExpand" VerticalOptions="Center"/>
@@ -92,11 +96,18 @@
 
         <StackLayout Grid.Row="2" BackgroundColor="#ffffff">
 
-            <Label HeightRequest="1" BackgroundColor="#e3e3e3"/>
-            <Label Text="Dont'Have Account Login? SignUp" VerticalOptions="FillAndExpand" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+            
+                <Button Text="Sesion por Sitio Web" 
+                   
+                   VerticalOptions="FillAndExpand" 
+                   x:Name="btnIngresarSesionWeb"
+                   Clicked="BtnIngresarSesionWeb_ClickedAsync"
+                   >
+                    
 
-
-        </StackLayout>
+                </Button>
+            
+            </StackLayout>
 
 
 

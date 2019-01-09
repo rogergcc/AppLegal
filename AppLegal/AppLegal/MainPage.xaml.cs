@@ -16,16 +16,19 @@ namespace AppLegal
         Location currentLocation = new Location();
         public MainPage()
         {
+            
+
+            InitializeComponent(); // layout por defecto
+            
             ToolbarItem toolbarItem = new ToolbarItem
             {
                 Icon = "logo.png"
             };
-            ToolbarItems.Add(toolbarItem);
+            //ToolbarItems.Add(toolbarItem);
             var margin = 20;
 
             var deviceId = CrossDeviceInfo.Current.Id;
 
-            InitializeComponent(); // layout por defecto
             //falta averiguar que antes q ejecute el mapa verifique permisos Location
 
             #region Layout por codigo
@@ -36,9 +39,9 @@ namespace AppLegal
             //    HeightRequest = App.ScreenHeight,
             //    WidthRequest = App.ScreenWidth,
             //    Margin = margin-5,
-                
+
             //    VerticalOptions = LayoutOptions.FillAndExpand
-                
+
             //};
 
             ////var locator = Plugin.Geolocator.CrossGeolocator.Current;
@@ -78,7 +81,7 @@ namespace AppLegal
             //var txtUsuario = new Label { Text = "Usuario" };
             //var txtImei = new Label { Text = "Imei" };
             //var imageUser = new Image {
-               
+
             //    Source = "usuario.png"
             //};
             //var imageImei = new Image
@@ -96,7 +99,7 @@ namespace AppLegal
             //    //    new Position(location2.Latitude, location2.Longitude),
             //    //    Distance.FromMiles(.2)));
             //};
-            
+
             //var stackUsuario = new StackLayout
             //{
             //    Orientation = StackOrientation.Horizontal,
@@ -110,16 +113,16 @@ namespace AppLegal
             //};
             //CornerRadius cornerRadius = new CornerRadius();
             //cornerRadius = 10;
-            
-           
+
+
             //var stackLayout = new StackLayout
             //{
-                
+
             //    Orientation = StackOrientation.Vertical,
             //    Padding= 20,
             //    Margin = margin-5,
             //    BackgroundColor = Color.FromHex("FFF"),
-                
+
             //    Children = { stackUsuario,stackImei}
             //};
             //var buttons = new StackLayout
@@ -130,13 +133,13 @@ namespace AppLegal
             //        morePins, reLocate
             //    }
             //};
-            
+
             //Content = new StackLayout
             //{
             //    BackgroundColor = Color.FromHex("c1c1c1"),
             //    Spacing = 0,
             //    Children = {
-                    
+
             //        stackLayout,
             //        //buttons,
             //        map

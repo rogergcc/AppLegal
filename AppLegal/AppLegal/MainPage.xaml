@@ -2,11 +2,21 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:AppLegal.Models"
+             
+             
              x:Class="AppLegal.MainPage"
              >
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text ="Item 1"  
+                Priority="0" Order="Primary" />
+        <ToolbarItem Text ="Item 2"  
+              Priority="1" Order="Primary" />
+        <!--<ToolbarItem Text ="Item 2"  
+              Priority="1" Order="Secondary" />-->
+    </ContentPage.ToolbarItems>
 
     <StackLayout Orientation="Vertical"
-                 BackgroundColor="Black"
+                 BackgroundColor="White"
             >
             <Label Text="Usuariosss"
                 VerticalOptions="Start" 

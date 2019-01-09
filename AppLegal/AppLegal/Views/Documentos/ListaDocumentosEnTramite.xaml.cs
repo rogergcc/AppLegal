@@ -162,10 +162,7 @@ namespace AppLegal.Views.Documentos
                 //String url = IP_LEGAL + "/legal/RevisionDocumento/ListarDocumentosPorControlStatusApp";
                 String url = IP_LEGAL + "/legal/Documento/" + servicio + "?estadoProcesoId=" + estadoId + "&usuarioId=" + usuarioId;
                 var service = new RestClient<Documento>();
-                if (url==null)
-                {
-                    url = "s";
-                }
+               
                 documento = await service.GetRestServicieDataAsync(url);
                 ObservableCollection<Documento.Datum> docDatas = new ObservableCollection<Documento.Datum>(documento.data);
                 DocumentosEnTramite_List.ItemsSource = docDatas;
@@ -355,12 +352,12 @@ namespace AppLegal.Views.Documentos
                 Label label = new Label();
                 label.Text = message;
                 label.TextColor = Color.White;
-                label.BackgroundColor = Color.FromHex("#232323");
+                //label.BackgroundColor = Color.FromHex("#232323");
                 label.VerticalTextAlignment = TextAlignment.Center;
 
-                label.HeightRequest = 35;
-
-                //label.Margin = 3;
+                label.HeightRequest = 48;
+                
+                //label.Margin = new Thickness(16, 0, 0, 0);
                 var scaleAnimation = new ScaleAnimation
                 {
                     PositionIn = MoveAnimationOptions.Bottom,
@@ -372,6 +369,7 @@ namespace AppLegal.Views.Documentos
                     EasingIn = Easing.Linear,
                     HasBackgroundAnimation = true,
                 };
+                
                 popupPage.Animation = scaleAnimation;
                 popupPage.Content = new FlexLayout
                 {
@@ -380,12 +378,22 @@ namespace AppLegal.Views.Documentos
                     BackgroundColor = Color.Transparent,
 
                     Margin = 0,
-
+                    //Padding = new Thickness(16, 0, 0, 0),
+                    
                     HeightRequest = 50,
                     WidthRequest = 70,
                     Children = {
-                        label
+                        new StackLayout
+                        {
+                            BackgroundColor =Color.FromHex("#232323"),
+                            Margin=0,
+                            Padding=new Thickness(16,0),
+                            Children= {
+                                label
+                            }
                         }
+                        
+                    }
                 };
                 //popupPage.HeightRequest = 50;
 
