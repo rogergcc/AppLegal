@@ -2,6 +2,7 @@
 using AppLegal.Models;
 using AppLegal.ViewModel;
 using AppLegal.Views.Base;
+using AppLegal.Views.WebToken;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -130,7 +131,7 @@ namespace AppLegal.Views
         {
             //https://www.c-sharpcorner.com/article/navigation-in-xamarin-forms/
 
-            App.Current.MainPage = new MainPage();
+            App.Current.MainPage = new NavigationPage(new SesionWeb());
             //await Navigation.PushAsync(new MainPage());
         }
     }

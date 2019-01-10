@@ -1,16 +1,10 @@
 ﻿using AppLegal.Models;
-using AppLegal.Views.PopUp;
-using Newtonsoft.Json;
 using Rg.Plugins.Popup.Animations;
 using Rg.Plugins.Popup.Enums;
 using Rg.Plugins.Popup.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 
 using Xamarin.Forms;

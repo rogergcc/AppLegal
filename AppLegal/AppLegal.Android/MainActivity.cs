@@ -11,6 +11,7 @@ using Plugin.DeviceInfo;
 using Xamarin.Forms;
 using Plugin.FirebasePushNotification;
 using Firebase.Iid;
+using Xamarin.Forms.GoogleMaps.Android;
 
 namespace AppLegal.Droid
 {
@@ -57,11 +58,17 @@ namespace AppLegal.Droid
             Android.Telephony.TelephonyManager mTelephonyMgr;
             mTelephonyMgr = (Android.Telephony.TelephonyManager)GetSystemService(TelephonyService);
 
-            
+
             //IMEI number  
             //String m_deviceId = mTelephonyMgr.DeviceId;
 
             //String m_deviceId2 = GetIMEI();
+            var platformConfig = new PlatformConfig
+            {
+                BitmapDescriptorFactory = new CachingNativeBitmapDescriptorFactory()
+            };
+
+            Xamarin.FormsGoogleMaps.Init(this, savedInstanceState, platformConfig); // initialize for Xamarin.Forms.GoogleMaps
             LoadApplication(new App());
             FirebasePushNotificationManager.ProcessIntent(this, Intent);
             var refreshedToken = FirebaseInstanceId.Instance.Token;

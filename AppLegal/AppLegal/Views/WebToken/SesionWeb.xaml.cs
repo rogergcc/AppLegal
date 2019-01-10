@@ -1,45 +1,26 @@
 ﻿using AppLegal.Models;
-using AppLegal.Views;
-using Plugin.DeviceInfo;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
-using Xamarin.Forms.Maps;
+using Xamarin.Forms.GoogleMaps;
 using Xamarin.Forms.Xaml;
 
-namespace AppLegal
+namespace AppLegal.Views.WebToken
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class MainPage : ContentPage
+    public partial class SesionWeb : ContentPage
     {
-        Map map;
-        Location currentLocation = new Location();
+        //Map map;
         private HttpClient _Client = new HttpClient();
         public ObservableCollection<Zona> Zonas { get; set; }
-
-        string usuarioId = App.Current.Properties["usuarioId"].ToString();
-        string usuarioNombre = App.Current.Properties["usuarioNombre"].ToString();
-        string rol = App.Current.Properties["rol"].ToString();
-        string empleadoId = App.Current.Properties["empleadoId"].ToString();
-        public MainPage()
+        //CustomMap customMap { get; set; }
+        Xamarin.Forms.GoogleMaps.Map googleMaps { get; set; }
+        Circle circle = null;
+        public SesionWeb()
         {
-
-
-            InitializeComponent(); // layout por defecto
-            getZonas();
-
-            //ToolbarItem toolbarItem = new ToolbarItem
-            //{
-            //    Icon = "logo.png"
-            //};
-
-            //ToolbarItems.Add(toolbarItem);
+            InitializeComponent();
             var margin = 20;
 
             //var deviceId = CrossDeviceInfo.Current.Id;
@@ -48,23 +29,39 @@ namespace AppLegal
 
             #region Layout por codigo
             #region codigo
-            map = new Map
+            //var customMap = new CustomMap
+            //{
+            //    MapType = MapType.Street,
+            //    WidthRequest = App.ScreenWidth,
+            //    HeightRequest = App.ScreenHeight
+            //};
+
+            //customMap = new CustomMap
+            //{
+            //    IsShowingUser = true,
+            //    HeightRequest = App.ScreenHeight,
+            //    WidthRequest = App.ScreenWidth,
+            //    Margin = margin - 5,
+
+            //    VerticalOptions = LayoutOptions.FillAndExpand
+
+            //};
+
+            googleMaps = new Xamarin.Forms.GoogleMaps.Map
             {
+
                 IsShowingUser = true,
                 HeightRequest = App.ScreenHeight,
                 WidthRequest = App.ScreenWidth,
                 Margin = margin - 5,
-
                 VerticalOptions = LayoutOptions.FillAndExpand
-
             };
-
             //var locator = Plugin.Geolocator.CrossGeolocator.Current;
 
             //var loc = currentLocation;
 
             posicionAsync();
-
+            //getZonas();
             //map.MoveToRegion(MapSpan.FromCenterAndRadius(
             //    new Position(36.9628066, -122.0194722), Distance.FromMiles(3)));
             var position = new Position(36.9628066, -122.0194722);
@@ -75,25 +72,14 @@ namespace AppLegal
                 Label = "Santa Cruz",
                 Address = "custom detail info"
             };
-            map.Pins.Add(pin);
 
-            var morePins = new Button { Text = "Add more pins" };
-            morePins.Clicked += (sender, e) =>
-            {
-                map.Pins.Add(new Pin
-                {
-                    Position = new Position(36.9641949, -122.0177232),
-                    Label = "Boardwalk"
-                });
-                map.Pins.Add(new Pin
-                {
-                    Position = new Position(36.9571571, -122.0173544),
-                    Label = "Wharf"
-                });
-                map.MoveToRegion(MapSpan.FromCenterAndRadius(
-                    new Position(36.9628066, -122.0194722), Distance.FromMiles(1.5)));
+            //customMap.Pins.Add(pin);
+            //googleMaps.Pins.Add(pin);
 
-            };
+            var obtenerZonas = new Button { Text = "Obtener Zonas" };
+            obtenerZonas.Clicked += ObtenerZonas_ClickedAsync;
+
+
             var txtUsuario = new Label { Text = "Usuario" };
             var txtImei = new Label { Text = "Imei" };
             var imageUser = new Image
@@ -144,10 +130,10 @@ namespace AppLegal
             };
             var buttons = new StackLayout
             {
-                Margin = margin - 5,
+                //Margin = margin - 5,
                 Orientation = StackOrientation.Horizontal,
                 Children = {
-                    morePins, reLocate
+                    obtenerZonas
                 }
             };
 
@@ -158,50 +144,19 @@ namespace AppLegal
                 Children = {
 
                     stackLayout,
-                    //buttons,
-                    map
+                    buttons,
+                    //customMap,
+                    googleMaps
                 }
             };
             #endregion codigo
 
             #endregion fin Layout por codigo
         }
-        public async void posicionAsync()
+
+        private async void ObtenerZonas_ClickedAsync(object sender, EventArgs e)
         {
-            var request = new GeolocationRequest(GeolocationAccuracy.High);
-            var location2 = await Geolocation.GetLocationAsync(request);
-            map.MoveToRegion(MapSpan.FromCenterAndRadius(
-                new Position(location2.Latitude, location2.Longitude),
-                Distance.FromMiles(.2)));
-        }
-        private async void Button_ClickedAsync(object sender, EventArgs e)
-        {
-            var locator = Plugin.Geolocator.CrossGeolocator.Current;
-            try
-            {
-                locator.DesiredAccuracy = 50;
-                var request = new GeolocationRequest(GeolocationAccuracy.High);
-                var location2 = await Geolocation.GetLocationAsync(request);
-
-                currentLocation = location2;
-
-                //var currentPosition = await locator.GetPositionAsync(TimeSpan.FromSeconds(10000));
-
-                //var afs = currentPosition.Latitude;
-            }
-            catch (Exception ex)
-            {
-
-                Console.Write("ERROR:  " + ex.ToString());
-                throw new NotImplementedException();
-            }
-
-
-
-        }
-
-        public async void getZonas()
-        {
+            int usuarioId = 5;
             String IP_LEGAL = "http://192.168.1.40";
             Zonas zonas = new Zonas();
             String url = IP_LEGAL + "/legal/ZonaTrabajo/ZonaTrabajoListarJsonExterno?id=" + usuarioId;
@@ -214,10 +169,75 @@ namespace AppLegal
 
             Zonas = new ObservableCollection<Zona>(zonas.zonas);
 
+            CustomCircle customCircle = new CustomCircle
+            {
+
+            };
+
+
+            for (int i = 0; i < zonas.zonas.Length; i++)
+            {
+                var position = new Position(zonas.zonas[i].Latitud, zonas.zonas[i].Longitud);
+                //customMap.Circle = new CustomCircle
+                //{
+                //    Position = position,
+                //    Radius = zonas.zonas[i].Radio
+                //};
+
+                //customMap.Pins.Add( new Pin
+                //{
+                //    Position = new Position(zonas.zonas[i].Latitud, zonas.zonas[i].Longitud),
+                //    Label = zonas.zonas[i].Direccion
+                //}
+
+                //https://github.com/amay077/Xamarin.Forms.GoogleMaps/blob/master/XFGoogleMapSample/XFGoogleMapSample/ShapesPage.xaml.cs
+                circle = new Circle();
+                circle.IsClickable = true;
+                circle.Center = position;
+                circle.Radius = Distance.FromMeters(zonas.zonas[i].Radio);
+
+                circle.StrokeColor = Color.SaddleBrown;
+                circle.StrokeWidth = 3f;
+                circle.FillColor = Color.FromRgba(0, 0, 255, 32);
+                circle.Tag = zonas.zonas[i].Direccion; // Can set any object
+                googleMaps.Circles.Add(circle);
+
+            }
+            
+        }
+
+        public async void getZonas()
+        {
+            int usuarioId = 5;
+            String IP_LEGAL = "http://192.168.1.40";
+            Zonas zonas = new Zonas();
+            String url = IP_LEGAL + "/legal/ZonaTrabajo/ZonaTrabajoListarJsonExterno?id=" + usuarioId;
+
+            var content = await _Client.GetStringAsync(url);
+            var service = new RestClient<Zonas>();
+            //Zonas = await service.GetRestServicieDataAsync(url);
+
+            zonas = await service.GetRestServicieDataAsync(url);
+
+            Zonas = new ObservableCollection<Zona>(zonas.zonas);
         }
         protected override async void OnAppearing()
         {
 
+
+        }
+        public async void posicionAsync()
+        {
+            var request = new GeolocationRequest(GeolocationAccuracy.High);
+            var location2 = await Geolocation.GetLocationAsync(request);
+
+            //customMap.MoveToRegion(MapSpan.FromCenterAndRadius(
+            //    new Position(location2.Latitude, location2.Longitude),
+            //    Distance.FromMiles(.2)));
+
+            googleMaps.MoveToRegion(MapSpan.FromCenterAndRadius(
+                new Position(location2.Latitude, location2.Longitude),
+                Distance.FromMiles(.2)));
 
         }
         private void ToolbarItem_Clicked(object sender, EventArgs e)

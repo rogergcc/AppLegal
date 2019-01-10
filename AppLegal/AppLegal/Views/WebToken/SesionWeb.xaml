@@ -1,11 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:AppLegal"
-             
-             Title="Sesion Web"
-             x:Class="AppLegal.MainPage"
-             >
+             x:Class="AppLegal.Views.WebToken.SesionWeb"
+             xmlns:maps="clr-namespace:Xamarin.Forms.GoogleMaps;assembly=Xamarin.Forms.GoogleMaps"
+              Title="Sesion Web">
     <ContentPage.ToolbarItems>
         <ToolbarItem Text ="Login" Icon="user.png" Clicked="ToolbarItem_Clicked"
                 Priority="0" Order="Primary" />
@@ -18,16 +16,15 @@
     <StackLayout Orientation="Vertical"
                  BackgroundColor="White"
             >
-            <Label Text="Usuariosss"
+        <Label Text="Usuariosss"
                 VerticalOptions="Start" 
                 HorizontalOptions="CenterAndExpand" />
         <Button
             Text="Posicion Actual"
-            Clicked="Button_ClickedAsync">
-            
-        </Button>
-        
-        
-    </StackLayout>
+            >
 
+        </Button>
+
+
+    </StackLayout>
 </ContentPage>

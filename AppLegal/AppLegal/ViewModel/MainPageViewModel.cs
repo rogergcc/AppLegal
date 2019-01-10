@@ -12,11 +12,11 @@ namespace AppLegal.ViewModel
         public ObservableCollection<Zona> Zonas { get; set; }
         public async Task LoadZonas()
         {
-            //var url = "http://192.168.0.12/legal/ZonaTrabajo/ZonaTrabajoListarJsonExterno?id=2";
+            var url = "http://192.168.0.12/legal/ZonaTrabajo/ZonaTrabajoListarJsonExterno?id=2";
            
-            //var service = new RestClient<Zonas>();
-            //var zonas = await service.GetRestServicieDataAsync(url);
-            //Zonas = new ObservableCollection<Zona>(zonas.zonas);
+            var service = new RestClient<Zonas>();
+            var zonas = await service.GetRestServicieDataAsync(url);
+            Zonas = new ObservableCollection<Zona>(zonas.zonas);
         }
     }
 }
