@@ -1,6 +1,7 @@
 ﻿using AppLegal.IViewModel;
 using AppLegal.Views;
 using AppLegal.Views.Base;
+using Newtonsoft.Json;
 using Plugin.FirebasePushNotification;
 using System;
 using Xamarin.Forms;
@@ -15,7 +16,7 @@ namespace AppLegal
         public static double ScreenWidth;
         public static App Current;
         static ILoginManager loginManager;
-        public App()
+        public App(string tokenRecibido)
         {
             InitializeComponent();
             //var isLoggedIn = Properties.ContainsKey("IsLoggedIn") ? (bool)Properties["IsLoggedIn"] : false;
@@ -73,6 +74,9 @@ namespace AppLegal
 
             Current.Properties["IpPublicado"] = "http://192.168.1.40";
 
+            //
+            App.Current.Properties["TokenPush"] = tokenRecibido;
+            //
             var isLoggedIn = Properties.ContainsKey("IsLoggedIn") ? (bool)Properties["IsLoggedIn"] : false;
 
             // we remember if they're logged in, and only display the login page if they're not
@@ -89,24 +93,41 @@ namespace AppLegal
             //MainPage = new RootPage(); //Navigation Drawer
 
             //MainPage = new MainPage();
-            //CrossFirebasePushNotification.Current.OnTokenRefresh += (s, p) =>
-            //{
-            //    System.Diagnostics.Debug.WriteLine($"TOKEN : {p.Token}");
-            //    System.Diagnostics.Debug.WriteLine("toklen: "+ p.Token);
-            //    Console.Out.WriteLine("TOKEN CONSOLE : + p." + p.Token);
-            //};
+            var ontokenRefresh="";
+            ontokenRefresh = CrossFirebasePushNotification.Current.Token;
+            CrossFirebasePushNotification.Current.OnTokenRefresh += (s, p) =>
+            {
+                System.Diagnostics.Debug.WriteLine("TOKEN :"+ p.Token);
+                ontokenRefresh = p.Token;
+                System.Diagnostics.Debug.WriteLine("toklen: " + p.Token);
+                Console.Out.WriteLine("TOKEN CONSOLE : + p." + p.Token);
+            };
+            
+            var notificationReceived = "";
 
-            //CrossFirebasePushNotification.Current.OnNotificationReceived += (s, p) =>
-            //{
-            //    //.Out.WriteLine("TOKEN CONSOLE : + p." + p.Token);
+            //var refreshedToken = FirebaseInstanceId.Instance.Token;
 
-            //    System.Diagnostics.Debug.WriteLine("Received");
+            CrossFirebasePushNotification.Current.OnNotificationReceived += (s, p) =>
+            {
+                Console.Out.WriteLine("TOKEN CONSOLE : + p." + p.Data);
+                notificationReceived = p.Data.ToString();
+                object objetoRecivido = p.Data;
+                var data = new
+                {
+                    codigo = 0,
+                    nombreUsuario = ""
+                };
+                
+                var json = JsonConvert.SerializeObject(p.Data, Newtonsoft.Json.Formatting.Indented);
+                //var myobject = JsonConvert.DeserializeObject<AOCAdvancedSettings>(json);
 
-            //};
+                System.Diagnostics.Debug.WriteLine("Received");
+                
+            };
             //CrossFirebasePushNotification.Current.OnNotificationOpened += (s, p) =>
             //{
             //    System.Diagnostics.Debug.WriteLine("Opened");
-            //    foreach (var data in p.Data)
+            //    foreach (var data in p.Data) 
             //    {
             //        System.Diagnostics.Debug.WriteLine($"{data.Key} : {data.Value}");
             //    }

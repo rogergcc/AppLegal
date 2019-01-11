@@ -67,11 +67,12 @@ namespace AppLegal.Droid
             {
                 BitmapDescriptorFactory = new CachingNativeBitmapDescriptorFactory()
             };
-
+            
             Xamarin.FormsGoogleMaps.Init(this, savedInstanceState, platformConfig); // initialize for Xamarin.Forms.GoogleMaps
-            LoadApplication(new App());
-            FirebasePushNotificationManager.ProcessIntent(this, Intent);
             var refreshedToken = FirebaseInstanceId.Instance.Token;
+            LoadApplication(new App(refreshedToken));
+            FirebasePushNotificationManager.ProcessIntent(this, Intent);
+            
             
         }
         public string GetIMEI()

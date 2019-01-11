@@ -5,7 +5,7 @@ using System.Linq;
 using Foundation;
 using ImageCircle.Forms.Plugin.iOS;
 using UIKit;
-
+using Plugin.FirebasePushNotification;
 namespace AppLegal.iOS
 {
     // The UIApplicationDelegate for the application. This class is responsible for launching the 
@@ -26,7 +26,9 @@ namespace AppLegal.iOS
             global::Xamarin.Forms.Forms.Init();
             //ImageCircleRenderer.Init();
 
-            LoadApplication(new App());
+            var refreshedToken = CrossFirebasePushNotification.Current.Token;
+
+            LoadApplication(new App(refreshedToken));
             Rg.Plugins.Popup.Popup.Init();
             return base.FinishedLaunching(app, options);
         }
