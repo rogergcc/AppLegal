@@ -65,6 +65,9 @@ namespace AppLegal.Droid
             //String m_deviceId = mTelephonyMgr.DeviceId;
 
             //String m_deviceId2 = GetIMEI();
+
+            string getUniqueIdAndroid = Android.Provider.Settings.Secure.GetString(Forms.Context.ContentResolver, Android.Provider.Settings.Secure.AndroidId);
+
             var platformConfig = new PlatformConfig
             {
                 BitmapDescriptorFactory = new CachingNativeBitmapDescriptorFactory()

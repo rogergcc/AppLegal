@@ -1,4 +1,5 @@
-﻿using AppLegal.Models;
+﻿using AppLegal.IViewModel;
+using AppLegal.Models;
 using Newtonsoft.Json;
 using Plugin.FirebasePushNotification;
 using Rg.Plugins.Popup.Animations;
@@ -8,7 +9,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
@@ -31,19 +34,22 @@ namespace AppLegal.Views.WebToken
 
         Label txtUsuario { get; set; }
         Entry ingresarIP { get; set; }
+        Button obtenerZonas { get; set; }
         string ontokenRefresh { get; set; }
         Circle circle = null;
         AOCAdvancedSettings myobject { get; set; }
+        private ISend _isendService;
         public SesionWeb()
         {
             InitializeComponent();
             var margin = 20;
 
-            Device.BeginInvokeOnMainThread(() => {
 
-                txtUsuario.Text = (myobject!=null)?myobject.nombreUsuario:"usuario";
-                
-            });
+            //Device.BeginInvokeOnMainThread(() => {
+
+            //    txtUsuario.Text = (myobject!=null)?myobject.nombreUsuario:"usuario";
+
+            //});
             //var deviceId = CrossDeviceInfo.Current.Id;
 
             //falta averiguar que antes q ejecute el mapa verifique permisos Location
@@ -70,11 +76,12 @@ namespace AppLegal.Views.WebToken
             //map.MoveToRegion(MapSpan.FromCenterAndRadius(
             //    new Position(36.9628066, -122.0194722), Distance.FromMiles(3)));
             var position = new Position(36.9628066, -122.0194722);
-            
-            var obtenerZonas = new Button { Text = "Obtener Zonas" };
+
+            obtenerZonas = new Button { Text = "Obtener Zonas" };
             obtenerZonas.Clicked += ObtenerZonas_ClickedAsync;
 
-            txtUsuario = new Label {
+            txtUsuario = new Label
+            {
                 WidthRequest = 60,
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 Text = "Usuario"
@@ -110,8 +117,8 @@ namespace AppLegal.Views.WebToken
             var stackImei = new StackLayout
             {
                 Orientation = StackOrientation.Horizontal,
-                WidthRequest= 60,
-                HorizontalOptions =LayoutOptions.FillAndExpand, 
+                WidthRequest = 60,
+                HorizontalOptions = LayoutOptions.FillAndExpand,
                 Children = { botonCodigoCel, txtImei }
             };
             CornerRadius cornerRadius = new CornerRadius();
@@ -180,6 +187,7 @@ namespace AppLegal.Views.WebToken
 
             CrossFirebasePushNotification.Current.OnNotificationReceived += async (s, p) =>
             {
+
                 //EJECUTAR ESTE METODO [OnNotificationReceived] POR DEFECTO Y NO CUANDO HAGA CLICK EN EL EVENTO
                 try
                 {
@@ -197,92 +205,38 @@ namespace AppLegal.Views.WebToken
                     myobject = JsonConvert.DeserializeObject<AOCAdvancedSettings>(json);
                     System.Diagnostics.Debug.WriteLine("Received");
                     txtUsuario.Text = myobject.nombreUsuario;
-                    Device.BeginInvokeOnMainThread(() => {
+                    //Device.BeginInvokeOnMainThread(() => {
 
-                        txtUsuario.Text = (myobject != null) ? myobject.nombreUsuario : "usuario";
+                    //    txtUsuario.Text = (myobject != null) ? myobject.nombreUsuario : "usuario";
 
-                    });
+                    //});
+                    //DependencyService.Get<ISend>().Send(myobject.codigo,myobject.nombreUsuario);
+                    _isendService = DependencyService.Get<ISend>();
+                    _isendService.Send(myobject.codigo, myobject.nombreUsuario);
 
-                    #region Circles Areas
-                    googleMaps.Circles.Clear();
-                    int usuarioId = 5;
-                    String IP_LEGAL = App.Current.Properties["IpPublicado"].ToString();
-                    Zonas zonas = new Zonas();
-                    String url = IP_LEGAL + "/legal/ZonaTrabajo/ZonaTrabajoListarJsonExterno?id=" + usuarioId;
-                    var content = await _Client.GetStringAsync(url);
-                    var service = new RestClient<Zonas>();
-
-                    zonas = await service.GetRestServicieDataAsync(url);
-                    //Zonas = new ObservableCollection<Zona>(zonas.zonas);
-
-                    bool habilitarAcceso = false;
-                    int userObtenerID = 0;
-                    int codigoZonaTrabajo = 0;
-
-                    double distance = 0.0d;
-                    const double metersInKm = 1000.0d;
-                    for (int i = 0; i < zonas.zonas.Length; i++)
-                    {
-                        var position = new Position(zonas.zonas[i].Latitud, zonas.zonas[i].Longitud);
-                        googleMaps.Pins.Add(new Pin
-                        {
-                            Position = position,
-                            Label = zonas.zonas[i].Direccion
-                        });
-
-                        //https://github.com/amay077/Xamarin.Forms.GoogleMaps/blob/master/XFGoogleMapSample/XFGoogleMapSample/ShapesPage.xaml.cs
-                        circle = new Circle();
-                        circle.IsClickable = true;
-                        circle.Center = position;
-                        circle.Radius = Distance.FromMeters(zonas.zonas[i].Radio);
-
-                        circle.StrokeColor = Color.SaddleBrown;
-                        circle.StrokeWidth = 3f;
-                        circle.FillColor = Color.FromRgba(0, 0, 255, 32);
-                        circle.Tag = zonas.zonas[i].Direccion; // Can set any object
-                        googleMaps.Circles.Add(circle);
-
-                        distance = Location.CalculateDistance(userCurrentlocation, position.Latitude,
-                            position.Longitude, DistanceUnits.Kilometers);//this result give in KM
-
-                        distance = distance * metersInKm;
-
-                        userObtenerID = zonas.zonas[i].UsuarioID;
-
-                        if (distance < zonas.zonas[i].Radio && codigoUsuario.Equals(userObtenerID))
-                        {
-                            habilitarAcceso = true;
-                            codigoZonaTrabajo = zonas.zonas[i].ZonaTrabajoId;
-                        }
-                        else
-                        {
-                            habilitarAcceso = (habilitarAcceso) ? habilitarAcceso : false;
-                        }
-
-                    }
-                    #endregion fin Circles Areas
+                    obtenerDatosDelServicioZonasTrabajoAsync(myobject.codigo);
 
                 }
                 catch (Exception ex)
                 {
 
-                    System.Diagnostics.Debug.WriteLine("error: "+ ex.Message);
+                    System.Diagnostics.Debug.WriteLine("error: " + ex.Message);
                 }
             };
         }
-
-        private async void ObtenerZonas_ClickedAsync(object sender, EventArgs e)
+        public async void obtenerDatosDelServicioZonasTrabajoAsync(int codigoUsuario)
         {
             googleMaps.Circles.Clear();
+            googleMaps.Pins.Clear();
+
             int usuarioId = 5;
             String IP_LEGAL = App.Current.Properties["IpPublicado"].ToString();
             Zonas zonas = new Zonas();
-            String url = IP_LEGAL + "/legal/ZonaTrabajo/ZonaTrabajoListarJsonExterno?id=" + usuarioId;
+            String url = IP_LEGAL + "/legal/ZonaTrabajo/ZonaTrabajoListarJsonExterno?id=" + codigoUsuario;
             var content = await _Client.GetStringAsync(url);
             var service = new RestClient<Zonas>();
 
             zonas = await service.GetRestServicieDataAsync(url);
-            //Zonas = new ObservableCollection<Zona>(zonas.zonas);
 
             bool habilitarAcceso = false;
             int userObtenerID = 0;
@@ -304,7 +258,6 @@ namespace AppLegal.Views.WebToken
                 circle.IsClickable = true;
                 circle.Center = position;
                 circle.Radius = Distance.FromMeters(zonas.zonas[i].Radio);
-
                 circle.StrokeColor = Color.SaddleBrown;
                 circle.StrokeWidth = 3f;
                 circle.FillColor = Color.FromRgba(0, 0, 255, 32);
@@ -313,7 +266,6 @@ namespace AppLegal.Views.WebToken
 
                 distance = Location.CalculateDistance(userCurrentlocation, position.Latitude,
                     position.Longitude, DistanceUnits.Kilometers);//this result give in KM
-
                 distance = distance * metersInKm;
 
                 userObtenerID = zonas.zonas[i].UsuarioID;
@@ -349,7 +301,85 @@ namespace AppLegal.Views.WebToken
 
             }
 
+            Position positionGMaps = new Position(userCurrentlocation.Latitude, userCurrentlocation.Longitude);
+            Geocoder geocoder = new Geocoder();
 
+            IEnumerable<string> address = await geocoder.GetAddressesForPositionAsync(positionGMaps);
+
+            var pais = "4";
+            var ciudad = "2";
+            var direccion = "0";
+
+            direccion = address.ElementAt(0);
+            ciudad = address.ElementAt(2);
+            pais = address.ElementAt(4);
+            mensajeEstaDentroZonaUsuarioAsync(mensaje, existeUsuario, habilitarAcceso);
+        }
+
+        private async void mensajeEstaDentroZonaUsuarioAsync(string mensaje, bool existeUsuario, bool habilitarAcceso)
+        {
+            Color color;
+            if (existeUsuario)
+                color = Color.DarkRed;
+            if (habilitarAcceso)
+                color = Color.DarkGreen;
+            else
+                color = Color.DarkRed;
+            Rg.Plugins.Popup.Pages.PopupPage popupPage = new Rg.Plugins.Popup.Pages.PopupPage();
+            Label label = new Label();
+            label.Text = mensaje;
+            label.TextColor = Color.White;
+            //label.BackgroundColor = Color.FromHex("#232323");
+            label.VerticalTextAlignment = TextAlignment.Center;
+
+            label.HeightRequest = 48;
+
+            //label.Margin = new Thickness(16, 13);
+            var scaleAnimation = new ScaleAnimation
+            {
+                PositionIn = MoveAnimationOptions.Bottom,
+                PositionOut = MoveAnimationOptions.Bottom,
+                ScaleIn = 2,
+                ScaleOut = 2,
+                //DurationIn = 400,
+                //DurationOut = 800,
+                EasingIn = Easing.Linear,
+                HasBackgroundAnimation = true,
+            };
+
+            popupPage.Animation = scaleAnimation;
+            popupPage.Content = new FlexLayout
+            {
+                Direction = FlexDirection.Column,
+                JustifyContent = FlexJustify.End,
+                BackgroundColor = Color.Transparent,
+                Margin = 0,
+                //Padding = new Thickness(16, 0, 0, 0),
+                HeightRequest = 50,
+                WidthRequest = 70,
+                Children = {
+                        new StackLayout
+                        {
+                            BackgroundColor = color,
+                            Margin=0,
+                            Padding=new Thickness(16,0),
+                            Children= {
+                                label
+                            }
+                        }
+                    }
+            };
+            //popupPage.HeightRequest = 50;
+
+
+            await PopupNavigation.Instance.PushAsync(popupPage);
+            await Task.Delay(2500);
+            await PopupNavigation.Instance.PopAllAsync();
+        }
+
+        private async void ObtenerZonas_ClickedAsync(object sender, EventArgs e)
+        {
+            obtenerDatosDelServicioZonasTrabajoAsync(5);
         }
 
         public async void getZonas()
@@ -373,6 +403,9 @@ namespace AppLegal.Views.WebToken
             var request = new GeolocationRequest(GeolocationAccuracy.High);
             var currentLocation = await Geolocation.GetLocationAsync(request);
             userCurrentlocation = currentLocation;
+
+
+
             //customMap.MoveToRegion(MapSpan.FromCenterAndRadius(
             //    new Position(location2.Latitude, location2.Longitude),
             //    Distance.FromMiles(.2)));
