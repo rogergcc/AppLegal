@@ -52,7 +52,7 @@ namespace AppLegal.Views.Documentos
 
         private async void btnSubirDocumentoAsync(object sender, EventArgs e)
         {
-            String IP_LEGAL = "http://192.168.1.40";
+            String IP_LEGAL = App.Current.Properties["IpPublicado"].ToString();
             String url = IP_LEGAL + "/legal/RevisionDocumento/RevizarDocumentoJson";
             documentoRevision.fileImagenOrPdf = imagenorPdf;
             

@@ -12,6 +12,8 @@ using Xamarin.Forms;
 using Plugin.FirebasePushNotification;
 using Firebase.Iid;
 using Xamarin.Forms.GoogleMaps.Android;
+using Android.Content;
+using Newtonsoft.Json;
 
 namespace AppLegal.Droid
 {
@@ -28,17 +30,17 @@ namespace AppLegal.Droid
         const int RequestLocationId = 0;
 
 
-        
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             TabLayoutResource = Resource.Layout.Tabbar;
             ToolbarResource = Resource.Layout.Toolbar;
-            
-            
+
+
             //var locator = Plugin.Geolocator.CrossGeolocator.Current;
             //var currentPosition = new Position();
             //var currentPosition = await locator.GetPositionAsync(TimeSpan.FromSeconds(10000));
-            
+
 
             base.OnCreate(savedInstanceState);
 
@@ -67,13 +69,32 @@ namespace AppLegal.Droid
             {
                 BitmapDescriptorFactory = new CachingNativeBitmapDescriptorFactory()
             };
-            
+
             Xamarin.FormsGoogleMaps.Init(this, savedInstanceState, platformConfig); // initialize for Xamarin.Forms.GoogleMaps
             var refreshedToken = FirebaseInstanceId.Instance.Token;
             LoadApplication(new App(refreshedToken));
             FirebasePushNotificationManager.ProcessIntent(this, Intent);
+            CrossFirebasePushNotification.Current.OnNotificationReceived += async (s, p) =>
+            {
+                Console.Out.WriteLine("TOKEN CONSOLE : + p." + p.Data);
+
+                object objetoRecivido = p.Data;
+                var data = new
+                {
+                    codigo = 0,
+                    nombreUsuario = ""
+                };
+                //https://github.com/CrossGeeks/FirebasePushNotificationPlugin/blob/master/docs/FirebaseNotifications.md
+
+                var json = JsonConvert.SerializeObject(p.Data, Newtonsoft.Json.Formatting.Indented);
+                var myobject = JsonConvert.DeserializeObject<AOCAdvancedSettings>(json);
+                Intent intents = new Intent("com.companyname.AppLegal.appzonas_FCM");
+
+                intents.PutExtra("codigo", myobject.codigo);
+                intents.PutExtra("nombreUsuario", myobject.nombreUsuario);
+            };
             
-            
+
         }
         public string GetIMEI()
         {
@@ -82,15 +103,27 @@ namespace AppLegal.Droid
                 // TODO: Some phones has more than 1 SIM card or may not have a SIM card inserted at all
                 return mTelephonyMgr.GetMeid(0);
             else
-            #pragma warning disable CS0618 // Type or member is obsolete
-                            return mTelephonyMgr.DeviceId;
-            #pragma warning restore CS0618 // Type or member is obsolete
+#pragma warning disable CS0618 // Type or member is obsolete
+                return mTelephonyMgr.DeviceId;
+#pragma warning restore CS0618 // Type or member is obsolete
         }
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Android.Content.PM.Permission[] grantResults)
         {
             Xamarin.Essentials.Platform.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+
+        private class AOCAdvancedSettings
+
+        {
+            public string title { get; set; }
+            public string body { get; set; }
+            public string sound { get; set; }
+            public string click_action { get; set; }
+            public string data { get; set; }
+            public int codigo { get; set; }
+            public string nombreUsuario { get; set; }
         }
     }
 }

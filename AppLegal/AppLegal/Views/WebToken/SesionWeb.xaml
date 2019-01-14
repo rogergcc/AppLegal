@@ -7,7 +7,9 @@
     <ContentPage.ToolbarItems>
         <ToolbarItem Text ="Login" Icon="user.png" Clicked="ToolbarItem_Clicked"
                 Priority="0" Order="Primary" />
-        <ToolbarItem Text ="IP"  Icon="ip-address.png"
+        <ToolbarItem Text ="IP"
+                     x:Name="tlbIpPublicada" Clicked="TlbIpPublicada_ClickedAsync"
+                     Icon="ip-address.png"
               Priority="1" Order="Primary" />
         <!--<ToolbarItem Text ="Item 2"  
               Priority="1" Order="Secondary" />-->

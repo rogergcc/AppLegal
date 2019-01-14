@@ -28,7 +28,7 @@ namespace AppLegal.Views.Documentos
         }
         protected override async void OnAppearing()
         {
-            String IP_LEGAL = "http://192.168.1.40";
+            String IP_LEGAL = App.Current.Properties["IpPublicado"].ToString();
             Documento documento = new Documento();
 
             String servicio = "";

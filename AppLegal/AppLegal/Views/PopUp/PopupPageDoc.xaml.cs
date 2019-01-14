@@ -70,7 +70,7 @@ namespace AppLegal.Views.PopUp
 
             }
             else {
-                String IP_LEGAL = "http://192.168.1.40";
+                String IP_LEGAL = App.Current.Properties["IpPublicado"].ToString();
                 
                 String url = IP_LEGAL+"/legal/RevisionDocumento/RevizarDocumentoJson";
                 

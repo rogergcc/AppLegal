@@ -56,7 +56,9 @@ namespace AppLegal.Views
                 return validado;
             }
             var client = new HttpClient();
-            client.BaseAddress = new Uri("http://192.168.1.40/legal/Usuario/ValidacionLoginExternoJson");
+            String IP_LEGAL = App.Current.Properties["IpPublicado"].ToString();
+
+            client.BaseAddress = new Uri(IP_LEGAL+"/legal/Usuario/ValidacionLoginExternoJson");
 
             
             var login = new 

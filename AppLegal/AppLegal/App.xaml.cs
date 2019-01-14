@@ -72,7 +72,7 @@ namespace AppLegal
             
             Current = this;
 
-            Current.Properties["IpPublicado"] = "http://192.168.1.40";
+            Current.Properties["IpPublicado"] = "http://192.168.0.12";
 
             //
             App.Current.Properties["TokenPush"] = tokenRecibido;
@@ -148,7 +148,9 @@ namespace AppLegal
             Properties["rol"] = "";
             Properties["empleadoId"] = "";
             Properties["IpPublicado"] = "";
+            
             App.Current.MainPage = new Login(this);
+
         }
     }
 }

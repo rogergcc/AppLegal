@@ -202,7 +202,7 @@ namespace AppLegal
 
         public async void getZonas()
         {
-            String IP_LEGAL = "http://192.168.1.40";
+            String IP_LEGAL = App.Current.Properties["IpPublicado"].ToString();
             Zonas zonas = new Zonas();
             String url = IP_LEGAL + "/legal/ZonaTrabajo/ZonaTrabajoListarJsonExterno?id=" + usuarioId;
 

@@ -10,17 +10,17 @@ using Xamarin.Forms.Xaml;
 
 namespace AppLegal.Views.Dashboard
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class DashboardPage : ContentPage
-	{
-        private const string url = "http://192.168.1.40/legal/ZonaTrabajo/ZonaTrabajoListarJsonExterno?id=2";
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class DashboardPage : ContentPage
+    {
+
         private HttpClient _Client = new HttpClient();
         private ObservableCollection<Zona> _post;
         public MainPageViewModel ViewModel { get; set; }
         public ObservableCollection<Zona> Zonas { get; set; }
-        public DashboardPage ()
-		{
-			InitializeComponent ();
+        public DashboardPage()
+        {
+            InitializeComponent();
             Estados_List.ItemSelected += async (sender, e) =>
             {
                 if (e.SelectedItem != null)
@@ -33,21 +33,24 @@ namespace AppLegal.Views.Dashboard
                     {
                         await Navigation.PushAsync(documentosEnTramite);
                     }
-                    else{
+                    else
+                    {
                         //DOC SEGUN ESTADO
 
                         var documentos = new ListaDocumentosEnTramite(e.SelectedItem as EstadoProceso);
 
                         await Navigation.PushAsync(documentos);
                     }
-                    
+
                     Estados_List.SelectedItem = null;
                 }
             };
         }
         protected override async void OnAppearing()
         {
-
+            
+            string IP_LEGAL = App.Current.Properties["IpPublicado"].ToString();
+            string url = IP_LEGAL+"/legal/ZonaTrabajo/ZonaTrabajoListarJsonExterno?id=2";
 
             var content = await _Client.GetStringAsync(url);
             var service = new RestClient<Zonas>();
@@ -58,7 +61,7 @@ namespace AppLegal.Views.Dashboard
 
             EstadoProceso estaProcesoPrimero = new EstadoProceso();
             estaProcesoPrimero.EstadoProcesoId = 32;
-            estaProcesoPrimero.Nombre="EN TRAMITE";
+            estaProcesoPrimero.Nombre = "EN TRAMITE";
             estaProcesoPrimero.Tipo = "STATUS DOCUMENTO";
             estadoProcesos.Add(estaProcesoPrimero);
 
@@ -71,13 +74,13 @@ namespace AppLegal.Views.Dashboard
             EstadoProceso estaProcesoTer = new EstadoProceso();
             estaProcesoTer.EstadoProcesoId = 31;
             estaProcesoTer.Nombre = "CANCELADO";
-            estaProcesoTer.Tipo= "STATUS DOCUMENTO";
+            estaProcesoTer.Tipo = "STATUS DOCUMENTO";
             estadoProcesos.Add(estaProcesoTer);
 
             EstadoProceso estaProcesoCuar = new EstadoProceso();
             estaProcesoCuar.EstadoProcesoId = 30;
             estaProcesoCuar.Nombre = "CURSO";
-            estaProcesoCuar.Tipo= "STATUS DOCUMENTO";
+            estaProcesoCuar.Tipo = "STATUS DOCUMENTO";
             estadoProcesos.Add(estaProcesoCuar);
 
             Estados_List.ItemsSource = estadoProcesos;

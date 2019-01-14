@@ -47,7 +47,7 @@ namespace AppLegal.Views.Documentos
         public async void ListarDocumentosPorControlStatusAppAsync()
         {
             //TODO STATUS TRAMITE
-            String IP_LEGAL = "http://192.168.1.40";
+            String IP_LEGAL = App.Current.Properties["IpPublicado"].ToString();
 
 
 
@@ -76,7 +76,7 @@ namespace AppLegal.Views.Documentos
         }
         protected override async void OnAppearing()
         {
-            String IP_LEGAL = "http://192.168.1.40";
+            String IP_LEGAL = App.Current.Properties["IpPublicado"].ToString();
             Documento documento = new Documento();
             //https://dzone.com/articles/mobile-alerts-in-xamarin
             if (estadoNom.Equals("POR APROBAR"))
@@ -312,7 +312,7 @@ namespace AppLegal.Views.Documentos
             }
             else
             {
-                String IP_LEGAL = "http://192.168.1.40";
+                String IP_LEGAL = App.Current.Properties["IpPublicado"].ToString();
                 String url = IP_LEGAL + "/legal/RevisionDocumento/RevizarDocumentoJson";
                 var post = new
                 {
