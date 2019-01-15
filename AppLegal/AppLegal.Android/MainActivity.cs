@@ -62,9 +62,9 @@ namespace AppLegal.Droid
 
 
             //IMEI number  
-            //String m_deviceId = mTelephonyMgr.DeviceId;
+            String m_deviceId = mTelephonyMgr.DeviceId;
 
-            //String m_deviceId2 = GetIMEI();
+            String m_deviceId2 = GetIMEI();
 
             string getUniqueIdAndroid = Android.Provider.Settings.Secure.GetString(Forms.Context.ContentResolver, Android.Provider.Settings.Secure.AndroidId);
 
@@ -77,24 +77,9 @@ namespace AppLegal.Droid
             var refreshedToken = FirebaseInstanceId.Instance.Token;
             LoadApplication(new App(refreshedToken));
             FirebasePushNotificationManager.ProcessIntent(this, Intent);
-            CrossFirebasePushNotification.Current.OnNotificationReceived += async (s, p) =>
+            CrossFirebasePushNotification.Current.OnNotificationReceived +=  (s, p) =>
             {
-                Console.Out.WriteLine("TOKEN CONSOLE : + p." + p.Data);
-
-                object objetoRecivido = p.Data;
-                var data = new
-                {
-                    codigo = 0,
-                    nombreUsuario = ""
-                };
-                //https://github.com/CrossGeeks/FirebasePushNotificationPlugin/blob/master/docs/FirebaseNotifications.md
-
-                var json = JsonConvert.SerializeObject(p.Data, Newtonsoft.Json.Formatting.Indented);
-                var myobject = JsonConvert.DeserializeObject<AOCAdvancedSettings>(json);
-                Intent intents = new Intent("com.companyname.AppLegal.appzonas_FCM");
-
-                intents.PutExtra("codigo", myobject.codigo);
-                intents.PutExtra("nombreUsuario", myobject.nombreUsuario);
+                
             };
             
 

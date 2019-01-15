@@ -1,6 +1,7 @@
 ﻿using AppLegal.IViewModel;
 using AppLegal.Models;
 using Newtonsoft.Json;
+using Plugin.DeviceInfo;
 using Plugin.FirebasePushNotification;
 using Rg.Plugins.Popup.Animations;
 using Rg.Plugins.Popup.Enums;
@@ -37,13 +38,15 @@ namespace AppLegal.Views.WebToken
         Button obtenerZonas { get; set; }
         string ontokenRefresh { get; set; }
         Circle circle = null;
-        AOCAdvancedSettings myobject { get; set; }
+
         private ISend _isendService;
         public SesionWeb()
         {
             InitializeComponent();
             var margin = 20;
 
+            //_isendService = DependencyService.Get<ISend>();
+            //_isendService.Send(myobject.codigo, myobject.nombreUsuario);
 
             //Device.BeginInvokeOnMainThread(() => {
 
@@ -51,12 +54,10 @@ namespace AppLegal.Views.WebToken
 
             //});
             //var deviceId = CrossDeviceInfo.Current.Id;
-
             //falta averiguar que antes q ejecute el mapa verifique permisos Location
 
             #region Layout MAPS por codigo
             #region  MAPS codigo lib GoogleMaps
-
             googleMaps = new Xamarin.Forms.GoogleMaps.Map
             {
                 IsShowingUser = true,
@@ -68,13 +69,9 @@ namespace AppLegal.Views.WebToken
             };
             googleMaps.UiSettings.MyLocationButtonEnabled = true;
             //var locator = Plugin.Geolocator.CrossGeolocator.Current;
-
             //var loc = currentLocation;
-
             posicionAsync();
             //getZonas();
-            //map.MoveToRegion(MapSpan.FromCenterAndRadius(
-            //    new Position(36.9628066, -122.0194722), Distance.FromMiles(3)));
             var position = new Position(36.9628066, -122.0194722);
 
             obtenerZonas = new Button { Text = "Obtener Zonas" };
@@ -94,21 +91,14 @@ namespace AppLegal.Views.WebToken
             };
             var imageImei = new Image
             {
-
                 Source = "contrasena.png"
             };
-
             var botonCodigoCel = new ImageButton
             {
 
                 Source = "contrasena.png"
             };
             botonCodigoCel.Clicked += BotonCodigoCel_Clicked;
-            var reLocate = new Button { Text = "Posicion Actual" };
-            reLocate.Clicked += (sender, e) =>
-            {
-
-            };
             var stackUsuario = new StackLayout
             {
                 Orientation = StackOrientation.Horizontal,
@@ -121,11 +111,8 @@ namespace AppLegal.Views.WebToken
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 Children = { botonCodigoCel, txtImei }
             };
-            CornerRadius cornerRadius = new CornerRadius();
-            cornerRadius = 10;
             var stackLayout = new StackLayout
             {
-
                 Orientation = StackOrientation.Vertical,
                 Padding = 20,
                 Margin = margin - 5,
@@ -154,68 +141,50 @@ namespace AppLegal.Views.WebToken
                 }
             };
             #endregion codigo
-
             #endregion fin Layout por codigo
         }
 
         private void BotonCodigoCel_Clicked(object sender, EventArgs e)
         {
-            var tokenEnviadodesdeActividad = "";
+            var tokenEnviadodesdeMainActivity = "";
 
-            tokenEnviadodesdeActividad = App.Current.Properties["TokenPush"].ToString();
+            tokenEnviadodesdeMainActivity = App.Current.Properties["TokenPush"].ToString();
+
+            var deviceId = CrossDeviceInfo.Current.Id;
+
+            enviarTokenAlServidorAsync(tokenEnviadodesdeMainActivity, deviceId);
+
             ontokenRefresh = CrossFirebasePushNotification.Current.Token;
-
             System.Diagnostics.Debug.WriteLine("ontokenRefresh : " + ontokenRefresh);
-            System.Diagnostics.Debug.WriteLine("tokenEnviadodesdeActividad : " + tokenEnviadodesdeActividad);
+            System.Diagnostics.Debug.WriteLine("tokenEnviadodesdeActividad : " + tokenEnviadodesdeMainActivity);
 
             CrossFirebasePushNotification.Current.OnTokenRefresh += (s, p) =>
             {
                 System.Diagnostics.Debug.WriteLine("TokenRefresh :" + p.Token);
                 ontokenRefresh = p.Token;
-                System.Diagnostics.Debug.WriteLine("toklen: " + p.Token);
-                Console.Out.WriteLine("TOKEN CONSOLE : + p." + p.Token);
             };
-
             var notificationReceived = "";
-
             //var refreshedToken = FirebaseInstanceId.Instance.Token;
-
             CrossFirebasePushNotification.Current.OnNotificationOpened += (s, p) =>
             {
                 System.Diagnostics.Debug.WriteLine("Opened");
             };
-
-            CrossFirebasePushNotification.Current.OnNotificationReceived += async (s, p) =>
+            CrossFirebasePushNotification.Current.OnNotificationReceived += (s, p) =>
             {
-
                 //EJECUTAR ESTE METODO [OnNotificationReceived] POR DEFECTO Y NO CUANDO HAGA CLICK EN EL EVENTO
                 try
                 {
-                    Console.Out.WriteLine("TOKEN CONSOLE : + p." + p.Data);
-                    notificationReceived = p.Data.ToString();
-                    object objetoRecivido = p.Data;
-                    var data = new
+                    Device.BeginInvokeOnMainThread(() =>
                     {
-                        codigo = 0,
-                        nombreUsuario = ""
-                    };
-                    //https://github.com/CrossGeeks/FirebasePushNotificationPlugin/blob/master/docs/FirebaseNotifications.md
-                    var json = JsonConvert.SerializeObject(p.Data, Newtonsoft.Json.Formatting.Indented);
-                    myobject = new AOCAdvancedSettings();
-                    myobject = JsonConvert.DeserializeObject<AOCAdvancedSettings>(json);
-                    System.Diagnostics.Debug.WriteLine("Received");
-                    txtUsuario.Text = myobject.nombreUsuario;
-                    //Device.BeginInvokeOnMainThread(() => {
-
-                    //    txtUsuario.Text = (myobject != null) ? myobject.nombreUsuario : "usuario";
-
-                    //});
-                    //DependencyService.Get<ISend>().Send(myobject.codigo,myobject.nombreUsuario);
-                    _isendService = DependencyService.Get<ISend>();
-                    _isendService.Send(myobject.codigo, myobject.nombreUsuario);
-
-                    obtenerDatosDelServicioZonasTrabajoAsync(myobject.codigo);
-
+                        //App.Current.MainPage = new SesionWeb();
+                        System.Diagnostics.Debug.WriteLine("Enter OnNotificationReceived");
+                        var json = JsonConvert.SerializeObject(p.Data, Newtonsoft.Json.Formatting.Indented);
+                        FirebasePushNotificactionData myobject;
+                        myobject = new FirebasePushNotificactionData();
+                        myobject = JsonConvert.DeserializeObject<FirebasePushNotificactionData>(json);
+                        txtUsuario.Text = myobject.nombreUsuario;
+                        obtenerDatosDelServicioZonasTrabajoAsync(myobject.codigo);
+                    });
                 }
                 catch (Exception ex)
                 {
@@ -224,12 +193,31 @@ namespace AppLegal.Views.WebToken
                 }
             };
         }
+
+        private async void enviarTokenAlServidorAsync(string tokenEnviadodesdeMainActivity, string deviceId)
+        {
+            String IP_LEGAL = App.Current.Properties["IpPublicado"].ToString();
+            String url = IP_LEGAL + "/legal/DispositivoUsuario/ActualizarTokenDispositivoDelUsuarioSegunImeiRegistradoJson";
+
+            var post = new
+            {
+                imei = deviceId,
+                token = tokenEnviadodesdeMainActivity,
+                
+            };
+            Documento documento = new Documento();
+            var service = new RestClient<Documento>();
+            documento = await service.GetRestServicieDataPostAsync(url, post);
+
+            var respuesta = documento.mensaje;
+            var mensaje = (documento.respuestaConsulta) ? "Token Registrado Correctamente" : "Token No Registrado, Verifique IMEI \n este registrado en el Sistema";
+            mensajeEstaDentroZonaUsuarioAsync(mensaje, documento.respuestaConsulta, documento.respuestaConsulta);
+        }
+
         public async void obtenerDatosDelServicioZonasTrabajoAsync(int codigoUsuario)
         {
             googleMaps.Circles.Clear();
             googleMaps.Pins.Clear();
-
-            int usuarioId = 5;
             String IP_LEGAL = App.Current.Properties["IpPublicado"].ToString();
             Zonas zonas = new Zonas();
             String url = IP_LEGAL + "/legal/ZonaTrabajo/ZonaTrabajoListarJsonExterno?id=" + codigoUsuario;
@@ -237,7 +225,6 @@ namespace AppLegal.Views.WebToken
             var service = new RestClient<Zonas>();
 
             zonas = await service.GetRestServicieDataAsync(url);
-
             bool habilitarAcceso = false;
             int userObtenerID = 0;
             int codigoZonaTrabajo = 0;
@@ -252,8 +239,6 @@ namespace AppLegal.Views.WebToken
                     Position = position,
                     Label = zonas.zonas[i].Direccion
                 });
-
-                //https://github.com/amay077/Xamarin.Forms.GoogleMaps/blob/master/XFGoogleMapSample/XFGoogleMapSample/ShapesPage.xaml.cs
                 circle = new Circle();
                 circle.IsClickable = true;
                 circle.Center = position;
@@ -269,17 +254,13 @@ namespace AppLegal.Views.WebToken
                 distance = distance * metersInKm;
 
                 userObtenerID = zonas.zonas[i].UsuarioID;
-
                 if (distance < zonas.zonas[i].Radio && codigoUsuario.Equals(userObtenerID))
                 {
                     habilitarAcceso = true;
                     codigoZonaTrabajo = zonas.zonas[i].ZonaTrabajoId;
                 }
                 else
-                {
                     habilitarAcceso = (habilitarAcceso) ? habilitarAcceso : false;
-                }
-
             }
             String estas = "0";
             bool existeUsuario = false;
@@ -300,20 +281,45 @@ namespace AppLegal.Views.WebToken
             {
 
             }
-
             Position positionGMaps = new Position(userCurrentlocation.Latitude, userCurrentlocation.Longitude);
             Geocoder geocoder = new Geocoder();
-
             IEnumerable<string> address = await geocoder.GetAddressesForPositionAsync(positionGMaps);
-
             var pais = "4";
             var ciudad = "2";
             var direccion = "0";
-
             direccion = address.ElementAt(0);
             ciudad = address.ElementAt(2);
             pais = address.ElementAt(4);
+            string imei = "";
+            HistorialAccesoInsertarJsonExternoAsync(codigoUsuario, imei,
+                                    userCurrentlocation.Latitude,
+                                    userCurrentlocation.Longitude,
+                                    pais,
+                                    ciudad,
+                                    direccion);
             mensajeEstaDentroZonaUsuarioAsync(mensaje, existeUsuario, habilitarAcceso);
+        }
+
+        private async void HistorialAccesoInsertarJsonExternoAsync(int codigoUsuario, string imei, double latitude, double longitude, string pais, string ciudad, string direccion)
+        {
+            String IP_LEGAL = App.Current.Properties["IpPublicado"].ToString();
+            String url = IP_LEGAL + "/legal/HistorialAcceso/HistorialAccesoInsertarJsonExterno";
+            
+            HistorialAcceso historialAcceso = new HistorialAcceso
+            {
+                UsuarioID = codigoUsuario,
+                IMEI = imei,
+                Latitud = latitude.ToString(),
+                Longitud = longitude.ToString(),
+                Pais = pais,
+                Ciudad=ciudad,
+                Direccion=direccion
+            };
+            Documento documento = new Documento();
+            var service = new RestClient<Documento>();
+            documento = await service.GetRestServicieDataPostAsync(url, historialAcceso);
+
+            var respuesta = documento.mensaje;
         }
 
         private async void mensajeEstaDentroZonaUsuarioAsync(string mensaje, bool existeUsuario, bool habilitarAcceso)
@@ -382,21 +388,7 @@ namespace AppLegal.Views.WebToken
             obtenerDatosDelServicioZonasTrabajoAsync(5);
         }
 
-        public async void getZonas()
-        {
-            int usuarioId = 5;
-            String IP_LEGAL = App.Current.Properties["IpPublicado"].ToString();
-            Zonas zonas = new Zonas();
-            String url = IP_LEGAL + "/legal/ZonaTrabajo/ZonaTrabajoListarJsonExterno?id=" + usuarioId;
 
-            var content = await _Client.GetStringAsync(url);
-            var service = new RestClient<Zonas>();
-            //Zonas = await service.GetRestServicieDataAsync(url);
-
-            zonas = await service.GetRestServicieDataAsync(url);
-
-            Zonas = new ObservableCollection<Zona>(zonas.zonas);
-        }
 
         public async void posicionAsync()
         {
@@ -420,7 +412,7 @@ namespace AppLegal.Views.WebToken
             App.Current.MainPage = new Login(App.Current);
         }
 
-        private class AOCAdvancedSettings
+        private class FirebasePushNotificactionData
         {
             public string title { get; set; }
             public string body { get; set; }
@@ -482,7 +474,7 @@ namespace AppLegal.Views.WebToken
                 VerticalOptions = LayoutOptions.CenterAndExpand,
                 TextColor = Color.White
             };
-            btnCambiarIpPublicada.Clicked += BtnCambiarIpPublicada_Clicked;
+            btnCambiarIpPublicada.Clicked += BtnCambiarIpPublicada_ClickedAsync;
 
             animationPopup.Content = new StackLayout
             {
@@ -512,10 +504,12 @@ namespace AppLegal.Views.WebToken
             await PopupNavigation.Instance.PushAsync(animationPopup);
         }
 
-        private void BtnCambiarIpPublicada_Clicked(object sender, EventArgs e)
+        private async void BtnCambiarIpPublicada_ClickedAsync(object sender, EventArgs e)
         {
 
             App.Current.Properties["IpPublicado"] = ingresarIP.Text;
+            await Task.Delay(2500);
+            await PopupNavigation.Instance.PopAllAsync();
         }
     }
 }

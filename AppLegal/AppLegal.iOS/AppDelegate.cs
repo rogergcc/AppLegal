@@ -6,6 +6,8 @@ using Foundation;
 using ImageCircle.Forms.Plugin.iOS;
 using UIKit;
 using Plugin.FirebasePushNotification;
+using Plugin.DeviceInfo;
+
 namespace AppLegal.iOS
 {
     // The UIApplicationDelegate for the application. This class is responsible for launching the 
@@ -25,8 +27,12 @@ namespace AppLegal.iOS
         {
             global::Xamarin.Forms.Forms.Init();
             //ImageCircleRenderer.Init();
-
+            //Xamarin.FormsGoogleMaps.Init("your_google_maps_ios_api_key");
             var refreshedToken = CrossFirebasePushNotification.Current.Token;
+
+            string getUniqueIdIOS = UIDevice.CurrentDevice.IdentifierForVendor.ToString();
+
+            var deviceId = CrossDeviceInfo.Current.Id;
 
             LoadApplication(new App(refreshedToken));
             Rg.Plugins.Popup.Popup.Init();

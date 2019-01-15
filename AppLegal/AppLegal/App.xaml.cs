@@ -97,33 +97,33 @@ namespace AppLegal
             ontokenRefresh = CrossFirebasePushNotification.Current.Token;
             CrossFirebasePushNotification.Current.OnTokenRefresh += (s, p) =>
             {
-                System.Diagnostics.Debug.WriteLine("TOKEN :"+ p.Token);
+                System.Diagnostics.Debug.WriteLine("TOKEN OnTokenRefresh:" + p.Token);
                 ontokenRefresh = p.Token;
-                System.Diagnostics.Debug.WriteLine("toklen: " + p.Token);
-                Console.Out.WriteLine("TOKEN CONSOLE : + p." + p.Token);
+                
             };
             
             var notificationReceived = "";
 
             //var refreshedToken = FirebaseInstanceId.Instance.Token;
 
-            CrossFirebasePushNotification.Current.OnNotificationReceived += (s, p) =>
-            {
-                Console.Out.WriteLine("TOKEN CONSOLE : + p." + p.Data);
-                notificationReceived = p.Data.ToString();
-                object objetoRecivido = p.Data;
-                var data = new
-                {
-                    codigo = 0,
-                    nombreUsuario = ""
-                };
+            //CrossFirebasePushNotification.Current.OnNotificationReceived += (s, p) =>
+            //{
+            //    Console.Out.WriteLine("TOKEN CONSOLE : + p." + p.Data);
+            //    notificationReceived = p.Data.ToString();
+            //    object objetoRecivido = p.Data;
+            //    var data = new
+            //    {
+            //        codigo = 0,
+            //        nombreUsuario = ""
+            //    };
                 
-                var json = JsonConvert.SerializeObject(p.Data, Newtonsoft.Json.Formatting.Indented);
-                //var myobject = JsonConvert.DeserializeObject<AOCAdvancedSettings>(json);
+            //    var json = JsonConvert.SerializeObject(p.Data, Newtonsoft.Json.Formatting.Indented);
+            //    //var myobject = JsonConvert.DeserializeObject<AOCAdvancedSettings>(json);
 
-                System.Diagnostics.Debug.WriteLine("Received");
+            //    System.Diagnostics.Debug.WriteLine("Received");
                 
-            };
+            //};
+
             //CrossFirebasePushNotification.Current.OnNotificationOpened += (s, p) =>
             //{
             //    System.Diagnostics.Debug.WriteLine("Opened");
