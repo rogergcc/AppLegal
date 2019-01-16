@@ -142,9 +142,9 @@ namespace AppLegal.Views.WebToken
             };
             labelTokenTiempoRestante = new Label
             {
-                Text = "Tiempo",
+                Text = "Token",
                 FontAttributes = FontAttributes.Bold,
-                FontSize = 20,
+                FontSize = 25,
                 TextColor = Color.White
             };
             var stackLayoutTokenRecibido = new StackLayout
@@ -154,7 +154,7 @@ namespace AppLegal.Views.WebToken
                 Padding = 10,
                 Orientation = StackOrientation.Horizontal,
                 Children = {
-                    labelToken,labelTokenTiempoRestante
+                    labelToken
                 }
             };
             Content = new StackLayout
