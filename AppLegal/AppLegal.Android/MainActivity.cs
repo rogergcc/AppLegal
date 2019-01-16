@@ -62,9 +62,9 @@ namespace AppLegal.Droid
 
 
             //IMEI number  
-            String m_deviceId = mTelephonyMgr.DeviceId;
+            //String m_deviceId = mTelephonyMgr.DeviceId; //primero debe aceptar los permisos
 
-            String m_deviceId2 = GetIMEI();
+            //String m_deviceId2 = GetIMEI(); //primero debe aceptar los permisos
 
             string getUniqueIdAndroid = Android.Provider.Settings.Secure.GetString(Forms.Context.ContentResolver, Android.Provider.Settings.Secure.AndroidId);
 

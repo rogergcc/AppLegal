@@ -147,8 +147,7 @@ namespace AppLegal
             Properties["usuarioNombre"] = "";
             Properties["rol"] = "";
             Properties["empleadoId"] = "";
-            Properties["IpPublicado"] = "";
-            
+            //Properties["IpPublicado"] = ""; no borrar la ip
             App.Current.MainPage = new Login(this);
 
         }

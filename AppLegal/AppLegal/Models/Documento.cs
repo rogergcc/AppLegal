@@ -6,12 +6,13 @@ namespace AppLegal.Models
 {
     public class Documento
     {
-        
-            public Datum[] data { get; set; }
-            public string mensaje { get; set; }
-            public bool respuestaConsulta { get; set; }
 
-            public DocumentoEntidad[] documentoEntidadRevis { get; set; }
+        public Datum[] data { get; set; }
+        public string mensaje { get; set; }
+        public bool respuestaConsulta { get; set; }
+        public bool respuesta { get; set; }
+
+        public DocumentoEntidad[] documentoEntidadRevis { get; set; }
         public class Datum
         {
             public int DocumentoId { get; set; }

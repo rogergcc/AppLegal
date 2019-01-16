@@ -34,8 +34,10 @@ namespace AppLegal.Views.WebToken
         public bool accesoHabilitado { get; set; } = false;
 
         Label txtUsuario { get; set; }
+        Label txtImei { get; set; }
         Entry ingresarIP { get; set; }
-        Button obtenerZonas { get; set; }
+        Label labelToken { get; set; }
+        Label labelTokenTiempoRestante { get; set; }
         string ontokenRefresh { get; set; }
         Circle circle = null;
 
@@ -53,79 +55,106 @@ namespace AppLegal.Views.WebToken
             //    txtUsuario.Text = (myobject!=null)?myobject.nombreUsuario:"usuario";
 
             //});
-            //var deviceId = CrossDeviceInfo.Current.Id;
-            //falta averiguar que antes q ejecute el mapa verifique permisos Location
 
             #region Layout MAPS por codigo
             #region  MAPS codigo lib GoogleMaps
             googleMaps = new Xamarin.Forms.GoogleMaps.Map
             {
-                IsShowingUser = true,
                 MyLocationEnabled = true,
                 HeightRequest = App.ScreenHeight,
                 WidthRequest = App.ScreenWidth,
                 Margin = margin - 5,
-                VerticalOptions = LayoutOptions.FillAndExpand
+                VerticalOptions = LayoutOptions.FillAndExpand,
+
             };
             googleMaps.UiSettings.MyLocationButtonEnabled = true;
-            //var locator = Plugin.Geolocator.CrossGeolocator.Current;
-            //var loc = currentLocation;
-            posicionAsync();
-            //getZonas();
-            var position = new Position(36.9628066, -122.0194722);
 
-            obtenerZonas = new Button { Text = "Obtener Zonas" };
-            obtenerZonas.Clicked += ObtenerZonas_ClickedAsync;
+            posicionAsync();
+
+
 
             txtUsuario = new Label
             {
-                WidthRequest = 60,
+                VerticalOptions = LayoutOptions.Center,
+
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 Text = "Usuario"
             };
-            var txtImei = new Label { Text = "Imei" };
+            txtImei = new Label
+            {
+                Text = "Imei",
+                VerticalOptions = LayoutOptions.Center,
+
+                HorizontalOptions = LayoutOptions.FillAndExpand,
+            };
             var imageUser = new Image
             {
-
-                Source = "usuario.png"
+                Source = "usuario.png",
+                VerticalOptions = LayoutOptions.Center,
+                WidthRequest = 30,
+                HeightRequest = 35
             };
-            var imageImei = new Image
-            {
-                Source = "contrasena.png"
-            };
+            //var imageImei = new Image
+            //{
+            //    Source = "contrasena.png",
+            //    VerticalOptions = LayoutOptions.Center,
+            //    WidthRequest = 15
+            //};
             var botonCodigoCel = new ImageButton
             {
-
-                Source = "contrasena.png"
+                Source = "contrasena.png",
+                VerticalOptions = LayoutOptions.Center,
+                WidthRequest = 30,
+                HeightRequest = 35
             };
             botonCodigoCel.Clicked += BotonCodigoCel_Clicked;
             var stackUsuario = new StackLayout
             {
+
+                WidthRequest = 120,
                 Orientation = StackOrientation.Horizontal,
+                VerticalOptions = LayoutOptions.Center,
                 Children = { imageUser, txtUsuario }
             };
             var stackImei = new StackLayout
             {
+                WidthRequest = 120,
+
                 Orientation = StackOrientation.Horizontal,
-                WidthRequest = 60,
-                HorizontalOptions = LayoutOptions.FillAndExpand,
+                VerticalOptions = LayoutOptions.Center,
                 Children = { botonCodigoCel, txtImei }
             };
             var stackLayout = new StackLayout
             {
                 Orientation = StackOrientation.Vertical,
-                Padding = 20,
+                Padding = 10,
                 Margin = margin - 5,
                 BackgroundColor = Color.FromHex("FFF"),
 
                 Children = { stackUsuario, stackImei }
             };
-            var buttons = new StackLayout
+            labelToken = new Label
+            {
+                Text = "Token",
+                FontAttributes =FontAttributes.Bold,
+                FontSize = 25,
+                TextColor = Color.White
+            };
+            labelTokenTiempoRestante = new Label
+            {
+                Text = "Tiempo",
+                FontAttributes = FontAttributes.Bold,
+                FontSize = 20,
+                TextColor = Color.White
+            };
+            var stackLayoutTokenRecibido = new StackLayout
             {
                 //Margin = margin - 5,
+                HorizontalOptions = LayoutOptions.CenterAndExpand,
+                Padding = 10,
                 Orientation = StackOrientation.Horizontal,
                 Children = {
-                    obtenerZonas
+                    labelToken,labelTokenTiempoRestante
                 }
             };
             Content = new StackLayout
@@ -135,7 +164,7 @@ namespace AppLegal.Views.WebToken
                 Children = {
 
                     stackLayout,
-                    buttons,
+                    stackLayoutTokenRecibido,
                     //customMap,
                     googleMaps
                 }
@@ -151,7 +180,7 @@ namespace AppLegal.Views.WebToken
             tokenEnviadodesdeMainActivity = App.Current.Properties["TokenPush"].ToString();
 
             var deviceId = CrossDeviceInfo.Current.Id;
-
+            txtImei.Text = deviceId;
             enviarTokenAlServidorAsync(tokenEnviadodesdeMainActivity, deviceId);
 
             ontokenRefresh = CrossFirebasePushNotification.Current.Token;
@@ -163,15 +192,13 @@ namespace AppLegal.Views.WebToken
                 System.Diagnostics.Debug.WriteLine("TokenRefresh :" + p.Token);
                 ontokenRefresh = p.Token;
             };
-            var notificationReceived = "";
-            //var refreshedToken = FirebaseInstanceId.Instance.Token;
+
             CrossFirebasePushNotification.Current.OnNotificationOpened += (s, p) =>
             {
                 System.Diagnostics.Debug.WriteLine("Opened");
             };
             CrossFirebasePushNotification.Current.OnNotificationReceived += (s, p) =>
             {
-                //EJECUTAR ESTE METODO [OnNotificationReceived] POR DEFECTO Y NO CUANDO HAGA CLICK EN EL EVENTO
                 try
                 {
                     Device.BeginInvokeOnMainThread(() =>
@@ -183,6 +210,8 @@ namespace AppLegal.Views.WebToken
                         myobject = new FirebasePushNotificactionData();
                         myobject = JsonConvert.DeserializeObject<FirebasePushNotificactionData>(json);
                         txtUsuario.Text = myobject.nombreUsuario;
+                        googleMaps.Circles.Clear();
+                        googleMaps.Pins.Clear();
                         obtenerDatosDelServicioZonasTrabajoAsync(myobject.codigo);
                     });
                 }
@@ -203,15 +232,15 @@ namespace AppLegal.Views.WebToken
             {
                 imei = deviceId,
                 token = tokenEnviadodesdeMainActivity,
-                
+
             };
             Documento documento = new Documento();
             var service = new RestClient<Documento>();
             documento = await service.GetRestServicieDataPostAsync(url, post);
 
             var respuesta = documento.mensaje;
-            var mensaje = (documento.respuestaConsulta) ? "Token Registrado Correctamente" : "Token No Registrado, Verifique IMEI \n este registrado en el Sistema";
-            mensajeEstaDentroZonaUsuarioAsync(mensaje, documento.respuestaConsulta, documento.respuestaConsulta);
+            var mensaje = (documento.respuesta) ? "Token Registrado Correctamente" : "Token No Registrado, Verifique IMEI en el Sistema";
+            mensajeEstaDentroZonaUsuarioAsync(mensaje, documento.respuesta, documento.respuesta);
         }
 
         public async void obtenerDatosDelServicioZonasTrabajoAsync(int codigoUsuario)
@@ -245,7 +274,8 @@ namespace AppLegal.Views.WebToken
                 circle.Radius = Distance.FromMeters(zonas.zonas[i].Radio);
                 circle.StrokeColor = Color.SaddleBrown;
                 circle.StrokeWidth = 3f;
-                circle.FillColor = Color.FromRgba(0, 0, 255, 32);
+                //circle.FillColor = Color.FromRgba(0, 0, 255, 32); //error  intensifica el color por cada peticion 
+                circle.FillColor = Color.Transparent;
                 circle.Tag = zonas.zonas[i].Direccion; // Can set any object
                 googleMaps.Circles.Add(circle);
 
@@ -262,7 +292,7 @@ namespace AppLegal.Views.WebToken
                 else
                     habilitarAcceso = (habilitarAcceso) ? habilitarAcceso : false;
             }
-            String estas = "0";
+            String situacion = "0";
             bool existeUsuario = false;
             for (int i = 0; i < zonas.zonas.Length; i++)
             {
@@ -273,38 +303,99 @@ namespace AppLegal.Views.WebToken
                 }
             }
             if (existeUsuario == false)
-                estas = " sin Zona de Trabajo asignado";
+                situacion = " sin Zona de Trabajo asignado";
             else
-                estas = habilitarAcceso ? " Acceso Habilitado y Zona: " + codigoZonaTrabajo : "Se encuentra fuera de una Zona de Trabajo asignado";
-            String mensaje = "Usuario " + estas;
+                situacion = habilitarAcceso ? " Acceso Habilitado y Zona: " + codigoZonaTrabajo : "Se encuentra fuera de una Zona de Trabajo asignado";
+            String mensaje = "Usuario " + situacion;
+
+            //Si no hay zonas de Trabajo con ese usario no guarda su historial
             if (existeUsuario == false)
             {
-
+                mensajeEstaDentroZonaUsuarioAsync(mensaje, existeUsuario, habilitarAcceso);
             }
-            Position positionGMaps = new Position(userCurrentlocation.Latitude, userCurrentlocation.Longitude);
-            Geocoder geocoder = new Geocoder();
-            IEnumerable<string> address = await geocoder.GetAddressesForPositionAsync(positionGMaps);
-            var pais = "4";
-            var ciudad = "2";
-            var direccion = "0";
-            direccion = address.ElementAt(0);
-            ciudad = address.ElementAt(2);
-            pais = address.ElementAt(4);
-            string imei = "";
-            HistorialAccesoInsertarJsonExternoAsync(codigoUsuario, imei,
-                                    userCurrentlocation.Latitude,
-                                    userCurrentlocation.Longitude,
-                                    pais,
-                                    ciudad,
-                                    direccion);
-            mensajeEstaDentroZonaUsuarioAsync(mensaje, existeUsuario, habilitarAcceso);
+            else
+            {
+                Position positionGMaps = new Position(userCurrentlocation.Latitude, userCurrentlocation.Longitude);
+                Geocoder geocoder = new Geocoder();
+                IEnumerable<string> address = await geocoder.GetAddressesForPositionAsync(positionGMaps);
+                var pais = "4";
+                var ciudad = "2";
+                var direccion = "0";
+                direccion = address.ElementAt(0);
+                ciudad = address.ElementAt(2);
+                pais = address.ElementAt(4);
+                string imei = "";
+                HistorialAccesoInsertarJsonExternoAsync(codigoUsuario, imei,
+                                        userCurrentlocation.Latitude,
+                                        userCurrentlocation.Longitude,
+                                        pais,
+                                        ciudad,
+                                        direccion);
+
+                if (habilitarAcceso)
+                {
+                    habilitarAccesoAZonaTrabajoUsuarioAsync(codigoZonaTrabajo, "1");
+
+                    obtenerTokenDelUsuarioAsync(codigoUsuario);
+
+
+
+                }
+                else
+                {
+                    //habilitarAccesoAZonaTrabajoUsuario(codigoZonaTrabajo,"0");
+                    labelToken.Text = "Token";
+
+                }
+
+                mensajeEstaDentroZonaUsuarioAsync(mensaje, existeUsuario, habilitarAcceso);
+            }
+        }
+
+        private async void obtenerTokenDelUsuarioAsync(int codigoUsuario)
+        {
+
+            String IP_LEGAL = App.Current.Properties["IpPublicado"].ToString();
+            String url = IP_LEGAL + "/legal/Token/TokenListarJsonExterno";
+
+            var post = new
+            {
+                id_usuario = codigoUsuario
+
+            };
+            url += "?id_usuario=" + post.id_usuario;
+            Token token = new Token();
+            var service = new RestClient<Token>();
+            token = await service.GetRestServicieDataAsync(url);
+
+            labelToken.Text = token.token[0].token;
+
+            var tokenlista = "";
+        }
+
+        private async void habilitarAccesoAZonaTrabajoUsuarioAsync(int codigoZonaTrabajo, string habilitarDeshabilitarUbicacion)
+        {
+
+            String IP_LEGAL = App.Current.Properties["IpPublicado"].ToString();
+            String url = IP_LEGAL + "/legal/ZonaTrabajo/ZonaTrabajoEditarSenEncuentraEnZonaSegunIdJson";
+
+            var post = new
+            {
+                id = codigoZonaTrabajo,
+                ubicacion = habilitarDeshabilitarUbicacion
+            };
+            Documento documento = new Documento();
+            var service = new RestClient<Documento>();
+            documento = await service.GetRestServicieDataPostAsync(url, post);
+
+            var respuesta = documento.respuesta;
         }
 
         private async void HistorialAccesoInsertarJsonExternoAsync(int codigoUsuario, string imei, double latitude, double longitude, string pais, string ciudad, string direccion)
         {
             String IP_LEGAL = App.Current.Properties["IpPublicado"].ToString();
             String url = IP_LEGAL + "/legal/HistorialAcceso/HistorialAccesoInsertarJsonExterno";
-            
+
             HistorialAcceso historialAcceso = new HistorialAcceso
             {
                 UsuarioID = codigoUsuario,
@@ -312,8 +403,8 @@ namespace AppLegal.Views.WebToken
                 Latitud = latitude.ToString(),
                 Longitud = longitude.ToString(),
                 Pais = pais,
-                Ciudad=ciudad,
-                Direccion=direccion
+                Ciudad = ciudad,
+                Direccion = direccion
             };
             Documento documento = new Documento();
             var service = new RestClient<Documento>();
@@ -351,10 +442,14 @@ namespace AppLegal.Views.WebToken
                 //DurationOut = 800,
                 EasingIn = Easing.Linear,
                 HasBackgroundAnimation = true,
+
             };
 
             popupPage.Animation = scaleAnimation;
+
+            popupPage.BackgroundColor = Color.Transparent;
             popupPage.Content = new FlexLayout
+
             {
                 Direction = FlexDirection.Column,
                 JustifyContent = FlexJustify.End,
@@ -363,6 +458,7 @@ namespace AppLegal.Views.WebToken
                 //Padding = new Thickness(16, 0, 0, 0),
                 HeightRequest = 50,
                 WidthRequest = 70,
+
                 Children = {
                         new StackLayout
                         {
@@ -383,10 +479,6 @@ namespace AppLegal.Views.WebToken
             await PopupNavigation.Instance.PopAllAsync();
         }
 
-        private async void ObtenerZonas_ClickedAsync(object sender, EventArgs e)
-        {
-            obtenerDatosDelServicioZonasTrabajoAsync(5);
-        }
 
 
 
