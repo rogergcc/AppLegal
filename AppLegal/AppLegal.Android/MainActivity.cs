@@ -75,6 +75,8 @@ namespace AppLegal.Droid
 
             Xamarin.FormsGoogleMaps.Init(this, savedInstanceState, platformConfig); // initialize for Xamarin.Forms.GoogleMaps
             var refreshedToken = FirebaseInstanceId.Instance.Token;
+            //var ontokenRefresh = CrossFirebasePushNotification.Current.Token;
+
             LoadApplication(new App(refreshedToken));
             FirebasePushNotificationManager.ProcessIntent(this, Intent);
             CrossFirebasePushNotification.Current.OnNotificationReceived +=  (s, p) =>

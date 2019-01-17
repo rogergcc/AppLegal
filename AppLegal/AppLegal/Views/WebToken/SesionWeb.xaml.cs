@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Timers;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.GoogleMaps;
@@ -42,10 +43,20 @@ namespace AppLegal.Views.WebToken
         Circle circle = null;
 
         private ISend _isendService;
+        private System.Timers.Timer _timer;
+        private int _countSeconds;
         public SesionWeb()
         {
             InitializeComponent();
             var margin = 20;
+
+            _timer = new System.Timers.Timer();
+           
+            _timer.Interval = 1000;  //Trigger event every second
+            _timer.Elapsed += OnTimedEvent;
+            //count down 5 seconds
+            _countSeconds = 0;
+
 
             //_isendService = DependencyService.Get<ISend>();
             //_isendService.Send(myobject.codigo, myobject.nombreUsuario);
@@ -56,8 +67,8 @@ namespace AppLegal.Views.WebToken
 
             //});
 
-            #region Layout MAPS por codigo
-            #region  MAPS codigo lib GoogleMaps
+            
+            #region  Layout MAPS codigo lib GoogleMaps
             googleMaps = new Xamarin.Forms.GoogleMaps.Map
             {
                 MyLocationEnabled = true,
@@ -65,18 +76,12 @@ namespace AppLegal.Views.WebToken
                 WidthRequest = App.ScreenWidth,
                 Margin = margin - 5,
                 VerticalOptions = LayoutOptions.FillAndExpand,
-
             };
             googleMaps.UiSettings.MyLocationButtonEnabled = true;
-
             posicionAsync();
-
-
-
             txtUsuario = new Label
             {
                 VerticalOptions = LayoutOptions.Center,
-
                 HorizontalOptions = LayoutOptions.FillAndExpand,
                 Text = "Usuario"
             };
@@ -84,7 +89,6 @@ namespace AppLegal.Views.WebToken
             {
                 Text = "Imei",
                 VerticalOptions = LayoutOptions.Center,
-
                 HorizontalOptions = LayoutOptions.FillAndExpand,
             };
             var imageUser = new Image
@@ -110,7 +114,6 @@ namespace AppLegal.Views.WebToken
             botonCodigoCel.Clicked += BotonCodigoCel_Clicked;
             var stackUsuario = new StackLayout
             {
-
                 WidthRequest = 120,
                 Orientation = StackOrientation.Horizontal,
                 VerticalOptions = LayoutOptions.Center,
@@ -119,7 +122,6 @@ namespace AppLegal.Views.WebToken
             var stackImei = new StackLayout
             {
                 WidthRequest = 120,
-
                 Orientation = StackOrientation.Horizontal,
                 VerticalOptions = LayoutOptions.Center,
                 Children = { botonCodigoCel, txtImei }
@@ -130,31 +132,36 @@ namespace AppLegal.Views.WebToken
                 Padding = 10,
                 Margin = margin - 5,
                 BackgroundColor = Color.FromHex("FFF"),
-
                 Children = { stackUsuario, stackImei }
             };
             labelToken = new Label
             {
                 Text = "Token",
-                FontAttributes =FontAttributes.Bold,
-                FontSize = 25,
-                TextColor = Color.White
+                FontAttributes = FontAttributes.Bold,
+                FontSize = 28,
+                TextColor = Color.White,
+                HorizontalTextAlignment = TextAlignment.Center
             };
             labelTokenTiempoRestante = new Label
             {
-                Text = "Token",
+                Text = "tiempo restante",
                 FontAttributes = FontAttributes.Bold,
-                FontSize = 25,
-                TextColor = Color.White
+                FontSize = 18,
+                TextColor = Color.White,
+                HorizontalTextAlignment = TextAlignment.Center
             };
-            var stackLayoutTokenRecibido = new StackLayout
+            var stackLayoutTokenRecibido = new FlexLayout
             {
-                //Margin = margin - 5,
+                Direction = FlexDirection.Column,
+                JustifyContent = FlexJustify.Center,
+                BackgroundColor = Color.Transparent,
+                Margin = 0,
+                Padding = 0,
+                WidthRequest = 200,
                 HorizontalOptions = LayoutOptions.CenterAndExpand,
-                Padding = 10,
-                Orientation = StackOrientation.Horizontal,
+                //Padding = 10,
                 Children = {
-                    labelToken
+                    labelToken,labelTokenTiempoRestante
                 }
             };
             Content = new StackLayout
@@ -162,7 +169,6 @@ namespace AppLegal.Views.WebToken
                 BackgroundColor = Color.FromHex("c1c1c1"),
                 Spacing = 0,
                 Children = {
-
                     stackLayout,
                     stackLayoutTokenRecibido,
                     //customMap,
@@ -170,7 +176,7 @@ namespace AppLegal.Views.WebToken
                 }
             };
             #endregion codigo
-            #endregion fin Layout por codigo
+           
         }
 
         private void BotonCodigoCel_Clicked(object sender, EventArgs e)
@@ -210,14 +216,13 @@ namespace AppLegal.Views.WebToken
                         myobject = new FirebasePushNotificactionData();
                         myobject = JsonConvert.DeserializeObject<FirebasePushNotificactionData>(json);
                         txtUsuario.Text = myobject.nombreUsuario;
-                        googleMaps.Circles.Clear();
-                        googleMaps.Pins.Clear();
+                        //googleMaps.Circles.Clear();
+                        //googleMaps.Pins.Clear();
                         obtenerDatosDelServicioZonasTrabajoAsync(myobject.codigo);
                     });
                 }
                 catch (Exception ex)
                 {
-
                     System.Diagnostics.Debug.WriteLine("error: " + ex.Message);
                 }
             };
@@ -324,7 +329,7 @@ namespace AppLegal.Views.WebToken
                 direccion = address.ElementAt(0);
                 ciudad = address.ElementAt(2);
                 pais = address.ElementAt(4);
-                string imei = "";
+                string imei = CrossDeviceInfo.Current.Id;
                 HistorialAccesoInsertarJsonExternoAsync(codigoUsuario, imei,
                                         userCurrentlocation.Latitude,
                                         userCurrentlocation.Longitude,
@@ -337,15 +342,17 @@ namespace AppLegal.Views.WebToken
                     habilitarAccesoAZonaTrabajoUsuarioAsync(codigoZonaTrabajo, "1");
 
                     obtenerTokenDelUsuarioAsync(codigoUsuario);
-
-
-
+                    
                 }
                 else
                 {
                     //habilitarAccesoAZonaTrabajoUsuario(codigoZonaTrabajo,"0");
                     labelToken.Text = "Token";
-
+                    if (_timer.Enabled)
+                    {
+                        _timer.Stop();
+                        labelTokenTiempoRestante.Text = "tiempo restante";
+                    }
                 }
 
                 mensajeEstaDentroZonaUsuarioAsync(mensaje, existeUsuario, habilitarAcceso);
@@ -354,25 +361,40 @@ namespace AppLegal.Views.WebToken
 
         private async void obtenerTokenDelUsuarioAsync(int codigoUsuario)
         {
-
             String IP_LEGAL = App.Current.Properties["IpPublicado"].ToString();
             String url = IP_LEGAL + "/legal/Token/TokenListarJsonExterno";
-
             var post = new
             {
                 id_usuario = codigoUsuario
-
             };
             url += "?id_usuario=" + post.id_usuario;
             Token token = new Token();
             var service = new RestClient<Token>();
             token = await service.GetRestServicieDataAsync(url);
-
             labelToken.Text = token.token[0].token;
-
-            var tokenlista = "";
+            _countSeconds = token.tiempoexpiracion*60;
+            _timer.Enabled = true;
+            
         }
-
+        private void OnTimedEvent(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            //_countSeconds--;
+            //Update visual representation here
+            //Remember to do it on UI thread
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                _countSeconds = _countSeconds - 1;
+                TimeSpan _TimeSpan = TimeSpan.FromSeconds(_countSeconds);
+                labelTokenTiempoRestante.Text = string.Format("{0:00}:{1:00}", _TimeSpan.Minutes, _TimeSpan.Seconds);
+                if (_countSeconds == 0)
+                {
+                    _timer.Stop();
+                    labelTokenTiempoRestante.Text = "tiempo expirado";
+                    labelToken.Text = "Token";
+                    //labelTokenTiempoRestante.TextColor = Color.OrangeRed;
+                }
+            });
+        }
         private async void habilitarAccesoAZonaTrabajoUsuarioAsync(int codigoZonaTrabajo, string habilitarDeshabilitarUbicacion)
         {
 
