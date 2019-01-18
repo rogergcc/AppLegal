@@ -27,7 +27,7 @@ namespace AppLegal.iOS
         {
             global::Xamarin.Forms.Forms.Init();
             //ImageCircleRenderer.Init();
-            //Xamarin.FormsGoogleMaps.Init("your_google_maps_ios_api_key");
+            Xamarin.FormsGoogleMaps.Init("AIzaSyAp85Un8_O431Ibn_ml8iBNGWgXCd2cixc");
             var refreshedToken = CrossFirebasePushNotification.Current.Token;
 
             string getUniqueIdIOS = UIDevice.CurrentDevice.IdentifierForVendor.ToString();
