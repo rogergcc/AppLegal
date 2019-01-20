@@ -111,6 +111,8 @@
     <BundleResource Include="Resources\usuario.png" />
     <BundleResource Include="Resources\contrasena.png" />
     <BundleResource Include="Resources\logout.png" />
+    <BundleResource Include="Resources\ip-address.png" />
+    <BundleResource Include="Resources\user.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.storyboard" />

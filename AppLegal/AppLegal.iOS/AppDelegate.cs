@@ -25,6 +25,8 @@ namespace AppLegal.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
+            Rg.Plugins.Popup.Popup.Init(); 
+
             global::Xamarin.Forms.Forms.Init();
             //ImageCircleRenderer.Init();
             Xamarin.FormsGoogleMaps.Init("AIzaSyAp85Un8_O431Ibn_ml8iBNGWgXCd2cixc");
@@ -32,10 +34,10 @@ namespace AppLegal.iOS
 
             string getUniqueIdIOS = UIDevice.CurrentDevice.IdentifierForVendor.ToString();
 
-            var deviceId = CrossDeviceInfo.Current.Id;
+            //var deviceId = CrossDeviceInfo.Current.Id;
 
             LoadApplication(new App(refreshedToken));
-            Rg.Plugins.Popup.Popup.Init();
+
             return base.FinishedLaunching(app, options);
         }
     }
