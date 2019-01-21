@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Foundation;
-using ImageCircle.Forms.Plugin.iOS;
+
 using UIKit;
 using Plugin.FirebasePushNotification;
-using Plugin.DeviceInfo;
+
+using Xamarin.Forms.GoogleMaps.iOS;
+using Xamarin.Forms.GoogleMaps.iOS.Factories;
 
 namespace AppLegal.iOS
 {
@@ -29,16 +31,23 @@ namespace AppLegal.iOS
 
             global::Xamarin.Forms.Forms.Init();
             //ImageCircleRenderer.Init();
-            Xamarin.FormsGoogleMaps.Init("AIzaSyAp85Un8_O431Ibn_ml8iBNGWgXCd2cixc");
+           
             var refreshedToken = CrossFirebasePushNotification.Current.Token;
 
             string getUniqueIdIOS = UIDevice.CurrentDevice.IdentifierForVendor.ToString();
 
             //var deviceId = CrossDeviceInfo.Current.Id;
 
+            var platformConfig = new PlatformConfig
+            {
+                ImageFactory = new CachingImageFactory()
+            };
+            // Xamarin.FormsGoogleMaps.Init("AIzaSyAp85Un8_O431Ibn_ml8iBNGWgXCd2cixc");
+            Xamarin.FormsGoogleMaps.Init("AIzaSyAp85Un8_O431Ibn_ml8iBNGWgXCd2cixc", platformConfig);
             LoadApplication(new App(refreshedToken));
 
             return base.FinishedLaunching(app, options);
         }
     }
+
 }

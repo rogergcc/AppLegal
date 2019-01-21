@@ -104,16 +104,6 @@ namespace AppLegal.Droid
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
-        private class AOCAdvancedSettings
-
-        {
-            public string title { get; set; }
-            public string body { get; set; }
-            public string sound { get; set; }
-            public string click_action { get; set; }
-            public string data { get; set; }
-            public int codigo { get; set; }
-            public string nombreUsuario { get; set; }
-        }
+       
     }
 }

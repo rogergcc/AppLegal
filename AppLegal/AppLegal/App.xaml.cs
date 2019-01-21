@@ -72,7 +72,7 @@ namespace AppLegal
             
             Current = this;
 
-            Current.Properties["IpPublicado"] = "http://192.168.0,12";
+            Current.Properties["IpPublicado"] = "http://192.168.0.12";
 
             //
             App.Current.Properties["TokenPush"] = tokenRecibido;
