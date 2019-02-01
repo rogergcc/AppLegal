@@ -5,6 +5,7 @@ using AppLegal.Views.Base;
 using AppLegal.Views.WebToken;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Plugin.Connectivity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -113,13 +114,21 @@ namespace AppLegal.Views
         {
             _areCredentialsInvalid = false;
 
-            _areCredentialsInvalid = await validacionLoginAsync();
-            if (_areCredentialsInvalid)
+            var coneccion = CheckConnection();
+
+            if (coneccion)
             {
-                
-                App.Current.MainPage = new RootPage();
+                await DisplayAlert("Conexion Fallida", "Verifique su conexion a internet", "OK");
             }
-            
+            else { 
+                _areCredentialsInvalid = await validacionLoginAsync();
+                if (_areCredentialsInvalid)
+                {
+                
+                    App.Current.MainPage = new RootPage();
+                }
+            }
+
         }
         protected override void OnAppearing()
         {
@@ -127,6 +136,14 @@ namespace AppLegal.Views
             //ViewModel = new MainPageViewModel();
             //this.BindingContext = ViewModel;
             //await ViewModel.LoadZonas();
+        }
+        private bool CheckConnection()
+        {
+            if (!CrossConnectivity.Current.IsConnected)
+                //await Navigation.PushAsync(new YourPageWhenThereIsNoConnection());
+                return true;
+            else
+                return false;
         }
 
         private void BtnIngresarSesionWeb_ClickedAsync(object sender, EventArgs e)

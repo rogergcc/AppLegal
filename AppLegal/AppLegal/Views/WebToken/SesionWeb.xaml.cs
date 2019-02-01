@@ -1,6 +1,7 @@
 ﻿using AppLegal.IViewModel;
 using AppLegal.Models;
 using Newtonsoft.Json;
+using Plugin.Connectivity;
 using Plugin.DeviceInfo;
 using Plugin.FirebasePushNotification;
 using Rg.Plugins.Popup.Animations;
@@ -51,7 +52,7 @@ namespace AppLegal.Views.WebToken
             var margin = 20;
 
             _timer = new System.Timers.Timer();
-           
+
             _timer.Interval = 1000;  //Trigger event every second
             _timer.Elapsed += OnTimedEvent;
             //count down 5 seconds
@@ -67,7 +68,7 @@ namespace AppLegal.Views.WebToken
 
             //});
 
-            
+
             #region  Layout MAPS codigo lib GoogleMaps
             googleMaps = new Xamarin.Forms.GoogleMaps.Map
             {
@@ -176,56 +177,74 @@ namespace AppLegal.Views.WebToken
                 }
             };
             #endregion codigo
-           
+
+        }
+
+        private bool CheckConnection()
+        {
+            if (!CrossConnectivity.Current.IsConnected)
+                //await Navigation.PushAsync(new YourPageWhenThereIsNoConnection());
+                return true;
+            else
+                return false;
         }
 
         private void BotonCodigoCel_Clicked(object sender, EventArgs e)
         {
             var tokenEnviadodesdeMainActivity = "";
 
+            var coneccion = CheckConnection();
+            
             tokenEnviadodesdeMainActivity = App.Current.Properties["TokenPush"].ToString();
 
             var deviceId = CrossDeviceInfo.Current.Id;
             txtImei.Text = deviceId;
-            enviarTokenAlServidorAsync(tokenEnviadodesdeMainActivity, deviceId);
-
-            ontokenRefresh = CrossFirebasePushNotification.Current.Token;
-            System.Diagnostics.Debug.WriteLine("ontokenRefresh : " + ontokenRefresh);
-            System.Diagnostics.Debug.WriteLine("tokenEnviadodesdeActividad : " + tokenEnviadodesdeMainActivity);
-
-            CrossFirebasePushNotification.Current.OnTokenRefresh += (s, p) =>
+            if (coneccion)
             {
-                System.Diagnostics.Debug.WriteLine("TokenRefresh :" + p.Token);
-                ontokenRefresh = p.Token;
-            };
+                DisplayAlert("Conexion Fallida", "Verifique su conexion a internet", "OK");
+            }
+            else
+            {
+                enviarTokenAlServidorAsync(tokenEnviadodesdeMainActivity, deviceId);
 
-            CrossFirebasePushNotification.Current.OnNotificationOpened += (s, p) =>
-            {
-                System.Diagnostics.Debug.WriteLine("Opened");
-            };
-            CrossFirebasePushNotification.Current.OnNotificationReceived += (s, p) =>
-            {
-                try
+                ontokenRefresh = CrossFirebasePushNotification.Current.Token;
+                System.Diagnostics.Debug.WriteLine("ontokenRefresh : " + ontokenRefresh);
+                System.Diagnostics.Debug.WriteLine("tokenEnviadodesdeActividad : " + tokenEnviadodesdeMainActivity);
+
+                CrossFirebasePushNotification.Current.OnTokenRefresh += (s, p) =>
                 {
-                    Device.BeginInvokeOnMainThread(() =>
+                    System.Diagnostics.Debug.WriteLine("TokenRefresh :" + p.Token);
+                    ontokenRefresh = p.Token;
+                };
+
+                CrossFirebasePushNotification.Current.OnNotificationOpened += (s, p) =>
+                {
+                    System.Diagnostics.Debug.WriteLine("Opened");
+                };
+                CrossFirebasePushNotification.Current.OnNotificationReceived += (s, p) =>
+                {
+                    try
                     {
-                        //App.Current.MainPage = new SesionWeb();
-                        System.Diagnostics.Debug.WriteLine("Enter OnNotificationReceived");
-                        var json = JsonConvert.SerializeObject(p.Data, Newtonsoft.Json.Formatting.Indented);
-                        FirebasePushNotificactionData myobject;
-                        myobject = new FirebasePushNotificactionData();
-                        myobject = JsonConvert.DeserializeObject<FirebasePushNotificactionData>(json);
-                        txtUsuario.Text = myobject.nombreUsuario;
-                        //googleMaps.Circles.Clear();
-                        //googleMaps.Pins.Clear();
-                        obtenerDatosDelServicioZonasTrabajoAsync(myobject.codigo);
-                    });
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine("error: " + ex.Message);
-                }
-            };
+                        Device.BeginInvokeOnMainThread(() =>
+                        {
+                            //App.Current.MainPage = new SesionWeb();
+                            System.Diagnostics.Debug.WriteLine("Enter OnNotificationReceived");
+                            var json = JsonConvert.SerializeObject(p.Data, Newtonsoft.Json.Formatting.Indented);
+                            FirebasePushNotificactionData myobject;
+                            myobject = new FirebasePushNotificactionData();
+                            myobject = JsonConvert.DeserializeObject<FirebasePushNotificactionData>(json);
+                            txtUsuario.Text = myobject.nombreUsuario;
+                            //googleMaps.Circles.Clear();
+                            //googleMaps.Pins.Clear();
+                            obtenerDatosDelServicioZonasTrabajoAsync(myobject.codigo);
+                        });
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine("error: " + ex.Message);
+                    }
+                };
+            }
         }
 
         private async void enviarTokenAlServidorAsync(string tokenEnviadodesdeMainActivity, string deviceId)
@@ -342,7 +361,7 @@ namespace AppLegal.Views.WebToken
                     habilitarAccesoAZonaTrabajoUsuarioAsync(codigoZonaTrabajo, "1");
 
                     obtenerTokenDelUsuarioAsync(codigoUsuario);
-                    
+
                 }
                 else
                 {
@@ -372,9 +391,9 @@ namespace AppLegal.Views.WebToken
             var service = new RestClient<Token>();
             token = await service.GetRestServicieDataAsync(url);
             labelToken.Text = token.token[0].token;
-            _countSeconds = token.tiempoexpiracion*60;
+            _countSeconds = token.tiempoexpiracion * 60;
             _timer.Enabled = true;
-            
+
         }
         private void OnTimedEvent(object sender, System.Timers.ElapsedEventArgs e)
         {
@@ -562,10 +581,10 @@ namespace AppLegal.Views.WebToken
             };
             Label lblIp = new Label
             {
-                Text = "IP: ",
+                Text = "IP PUBLICADA",
                 FontSize = 14,
                 HorizontalOptions = LayoutOptions.Center,
-                Margin = 2
+                Margin = 1
             };
             ingresarIP = new Entry
             {
@@ -600,13 +619,13 @@ namespace AppLegal.Views.WebToken
                         {
                             new Frame
                             {
-                                Padding=15,
-                                HeightRequest=200,
-                                WidthRequest=270,
+                                Padding=10,
+                                HeightRequest=150,
+                                WidthRequest=250,
                                 Content = new StackLayout
                                 {
                                     Children = {
-                                        IpPublica,layoutIngresarIpPublica,
+                                        layoutIngresarIpPublica,
                                         btnCambiarIpPublicada
                                     }
                                 }
@@ -622,7 +641,7 @@ namespace AppLegal.Views.WebToken
         {
 
             App.Current.Properties["IpPublicado"] = ingresarIP.Text;
-            await Task.Delay(2500);
+            await Task.Delay(1000);
             await PopupNavigation.Instance.PopAllAsync();
         }
     }

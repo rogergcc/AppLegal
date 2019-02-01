@@ -2,7 +2,10 @@
 using AppLegal.Views;
 using AppLegal.Views.Base;
 using Newtonsoft.Json;
+using Plugin.Connectivity;
 using Plugin.FirebasePushNotification;
+using Rg.Plugins.Popup.Animations;
+using Rg.Plugins.Popup.Enums;
 using System;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -16,6 +19,16 @@ namespace AppLegal
         public static double ScreenWidth;
         public static App Current;
         static ILoginManager loginManager;
+
+        private bool CheckConnection()
+        {
+            if (!CrossConnectivity.Current.IsConnected)
+                //await Navigation.PushAsync(new YourPageWhenThereIsNoConnection());
+                return true;
+            else
+                return false;
+        }
+
         public App(string tokenRecibido)
         {
             InitializeComponent();
@@ -69,7 +82,18 @@ namespace AppLegal
             //    BarTextColor = Color.White
             //};
             #endregion fin lista Cards
+
+            //var seconds = TimeSpan.FromSeconds(1);
+            //Xamarin.Forms.Device.StartTimer(seconds,
+            //    () =>
+            //    {
+            //        CheckConnection();
+            //    });
             
+            var  coneccion = CheckConnection();
+
+            
+
             Current = this;
 
             Current.Properties["IpPublicado"] = "http://192.168.0.12";
@@ -78,6 +102,7 @@ namespace AppLegal
             App.Current.Properties["TokenPush"] = tokenRecibido;
             //
             var isLoggedIn = Properties.ContainsKey("IsLoggedIn") ? (bool)Properties["IsLoggedIn"] : false;
+
 
             // we remember if they're logged in, and only display the login page if they're not
             if (isLoggedIn)

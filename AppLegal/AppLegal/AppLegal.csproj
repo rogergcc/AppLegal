@@ -23,6 +23,7 @@
     <PackageReference Include="Plugin.FirebasePushNotification" Version="2.3.5" />
     <PackageReference Include="Plugin.Permissions" Version="4.0.2-beta" />
     <PackageReference Include="Rg.Plugins.Popup" Version="1.1.5.180" />
+    <PackageReference Include="Xam.Plugin.Connectivity" Version="3.2.0" />
     <PackageReference Include="Xam.Plugin.DeviceInfo" Version="4.0.0.13" />
     <PackageReference Include="Xam.Plugin.FilePicker" Version="1.1.0" />
     <PackageReference Include="Xam.Plugin.Geolocator" Version="4.5.4-beta" />
