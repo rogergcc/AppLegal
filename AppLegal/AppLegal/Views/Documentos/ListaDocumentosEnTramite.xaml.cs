@@ -189,10 +189,19 @@ namespace AppLegal.Views.Documentos
                             //EasingOut = Easing.CubicOut,
                             HasBackgroundAnimation = true,
                         };
+
+                        Label Status = new Label
+                        {
+                            Text = "Status: " + documentoSeleccionado.Status,
+                            FontSize = 13,
+                            HorizontalOptions = LayoutOptions.Center,
+                            Margin = 2,
+                            FontAttributes = FontAttributes.Bold
+                        };
                         Label NombreArchivo = new Label
                         {
                             Text = "Nemonico: " + documentoSeleccionado.NombreArchivo,
-                            FontSize = 13,
+                            FontSize = 14,
                             HorizontalOptions = LayoutOptions.Center,
                             Margin = 2
                         };
@@ -254,12 +263,12 @@ namespace AppLegal.Views.Documentos
                             new Frame
                             {
                                 Padding=15,
-                                HeightRequest=200,
+                                HeightRequest=300,
                                 WidthRequest=270,
                                 Content = new StackLayout
                                 {
                                     Children = {
-                                        NombreArchivo,Nemonico,SubTipoServicio,Fecha,
+                                        Status,NombreArchivo,Nemonico,SubTipoServicio,Fecha,
                                         btnAprobarDocumento,btnCancelarDocumento
                                     }
                                 }
@@ -312,6 +321,12 @@ namespace AppLegal.Views.Documentos
             }
             else
             {
+                var answer = await DisplayAlert("Confirmar", "Seguro que desea aprobar documento ?", "Si", "No");
+                if (!answer)
+                {
+                    return;
+                }
+
                 String IP_LEGAL = App.Current.Properties["IpPublicado"].ToString();
                 String url = IP_LEGAL + "/legal/RevisionDocumento/RevizarDocumentoJson";
                 var post = new
